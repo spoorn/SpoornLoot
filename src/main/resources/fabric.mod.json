@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "spoornloot",
+  "version": "${version}",
+  "name": "SpoornLoot",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/spoornloot/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "org.spoorn.spoornloot.client.SpoornlootClient"
+    ],
+    "main": [
+      "org.spoorn.spoornloot.SpoornLoot"
+    ]
+  },
+  "mixins": [
+    "spoornloot.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.2",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}
