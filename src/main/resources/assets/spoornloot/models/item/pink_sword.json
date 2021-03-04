@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "spoornloot:item/kiko_sword2"
+    "layer0": "spoornloot:item/pink_sword"
   }
 }
