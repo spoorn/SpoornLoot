@@ -1,18 +1,18 @@
 package org.spoorn.spoornloot.util.rarity;
 
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Rarity;
-
-import java.lang.reflect.Constructor;
+import lombok.Getter;
 
 public enum SpoornRarity {
-    COMMON(Rarity.COMMON.formatting.getColorValue()),
-    UNCOMMON(Rarity.UNCOMMON.formatting.getColorValue()),
-    RARE(Rarity.RARE.formatting.getColorValue()),
-    EPIC(Rarity.EPIC.formatting.getColorValue()),
+    COMMON(13401901),
+    UNCOMMON(5950509),
+    RARE(2977228),
+    EPIC(12278256),
+    LEGENDARY(3197337),
+    DOOM(13899581),
     PINK(16761035);
 
-    public Integer colorValue;
+    @Getter
+    private Integer colorValue;
 
     private SpoornRarity(Integer colorValue) {
         this.colorValue = colorValue;

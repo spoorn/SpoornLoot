@@ -18,6 +18,12 @@ public class SwordRegistry {
     public static final Item DEFAULT_SPOORN_SWORD = new SpoornSwordItem();
     public static final Item DEFAULT_KIKO_SWORD = new KikoSwordItem();
     public static final Item DEFAULT_PINK_SWORD = new PinkSwordItem();
+    public static final Item DEFAULT_CYAN_SWORD = new CyanSwordItem();
+    public static final Item DEFAULT_DAISY_SWORD = new DaisySwordItem();
+    public static final Item DEFAULT_EAGLE_SWORD = new EagleSwordItem();
+    public static final Item DEFAULT_GREEN_SWORD = new GreenSwordItem();
+    public static final Item DEFAULT_HEART_SWORD = new HeartSwordItem();
+    public static final Item DEFAULT_LANNISTER_SWORD = new LannisterSwordItem();
 
     private static final Identifier LOOT_CHEST_ID = new Identifier("minecraft", "chests");
 
@@ -49,6 +55,12 @@ public class SwordRegistry {
         Registry.register(Registry.ITEM, SpoornSwordItem.IDENTIFIER, DEFAULT_SPOORN_SWORD);
         Registry.register(Registry.ITEM, KikoSwordItem.IDENTIFIER, DEFAULT_KIKO_SWORD);
         Registry.register(Registry.ITEM, PinkSwordItem.IDENTIFIER, DEFAULT_PINK_SWORD);
+        Registry.register(Registry.ITEM, CyanSwordItem.IDENTIFIER, DEFAULT_CYAN_SWORD);
+        Registry.register(Registry.ITEM, DaisySwordItem.IDENTIFIER, DEFAULT_DAISY_SWORD);
+        Registry.register(Registry.ITEM, EagleSwordItem.IDENTIFIER, DEFAULT_EAGLE_SWORD);
+        Registry.register(Registry.ITEM, GreenSwordItem.IDENTIFIER, DEFAULT_GREEN_SWORD);
+        Registry.register(Registry.ITEM, HeartSwordItem.IDENTIFIER, DEFAULT_HEART_SWORD);
+        Registry.register(Registry.ITEM, LannisterSwordItem.IDENTIFIER, DEFAULT_LANNISTER_SWORD);
     }
 
     private void initSwordLootPool() {

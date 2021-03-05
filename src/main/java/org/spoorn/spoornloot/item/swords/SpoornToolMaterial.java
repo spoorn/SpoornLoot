@@ -1,5 +1,6 @@
 package org.spoorn.spoornloot.item.swords;
 
+import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 
@@ -34,6 +35,6 @@ public class SpoornToolMaterial implements ToolMaterial {
 
     @Override
     public Ingredient getRepairIngredient() {
-        return null;
+        return Ingredient.ofItems(Items.ENDER_PEARL);
     }
 }
