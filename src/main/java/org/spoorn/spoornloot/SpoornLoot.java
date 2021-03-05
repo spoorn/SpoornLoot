@@ -12,7 +12,6 @@ public class SpoornLoot implements ModInitializer {
     @Override
     public void onInitialize() {
         log.info("Hello mod from SpoornLoot!");
-        SwordRegistry swordRegistry = new SwordRegistry();
-        swordRegistry.addToLootChests();
+        SwordRegistry.init();
     }
 }

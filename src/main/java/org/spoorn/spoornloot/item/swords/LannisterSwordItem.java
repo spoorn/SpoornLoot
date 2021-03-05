@@ -17,8 +17,8 @@ public class LannisterSwordItem extends BaseSpoornSwordItem {
     public static final Identifier IDENTIFIER = new Identifier(MODID, "lannister_sword");
 
     private static final ToolMaterial DEFAULT_TOOL_MATERIAL = new SpoornToolMaterial();
-    private static final int DEFAULT_ATK_DMG = 65;
-    private static final float DEFAULT_ATK_SPD = 2.9f;
+    private static final int DEFAULT_ATK_DMG = 9;
+    private static final float DEFAULT_ATK_SPD = -2.2f;
     private static final SpoornRarity DEFAULT_SPOORN_RARITY = SpoornRarity.DOOM;
     private static final Settings DEFAULT_SETTINGS = new SpoornItemSettings()
             .spoornRarity(DEFAULT_SPOORN_RARITY)
