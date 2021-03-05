@@ -3,14 +3,25 @@ package org.spoorn.spoornloot.item.swords;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
+import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
 import static net.minecraft.item.ToolMaterials.DIAMOND;
 
 public class SpoornToolMaterial implements ToolMaterial {
 
+    private SpoornRarity spoornRarity;
+
+    public SpoornToolMaterial() {
+        spoornRarity = SpoornRarity.COMMON;
+    }
+
+    public SpoornToolMaterial(SpoornRarity spoornRarity) {
+        this.spoornRarity = spoornRarity;
+    }
+
     @Override
     public int getDurability() {
-        return 999;
+        return this.spoornRarity.getDefaultDurability();
     }
 
     @Override

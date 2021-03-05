@@ -9,6 +9,7 @@ import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.spoorn.spoornloot.config.ModConfig;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,10 +55,11 @@ public class SwordRegistry {
     }
 
     private static void initSwordLootPools() {
-        Set<LootPool> lootPools = new HashSet<>();
+        float chance = 1.0f / ModConfig.get().serverConfig.swordSpawnInLootChestsChance;
+        log.info("Spoorn sword spawn chance is {}", chance);
         FabricLootPoolBuilder builder = FabricLootPoolBuilder.builder()
                 .rolls(ConstantLootTableRange.create(1))
-                .withCondition(RandomChanceLootCondition.builder(1).build());
+                .withCondition(RandomChanceLootCondition.builder(chance).build());
         for (BaseSpoornSwordItem item : spoornSwords) {
             builder.withEntry(ItemEntry.builder(item).weight(item.getSpoornRarity().getWeight()).build());
         }
