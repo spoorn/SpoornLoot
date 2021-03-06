@@ -1,11 +1,10 @@
 package org.spoorn.spoornloot.item.swords;
 
+import static net.minecraft.item.ToolMaterials.DIAMOND;
 import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
-
-import static net.minecraft.item.ToolMaterials.DIAMOND;
 
 public class SpoornToolMaterial implements ToolMaterial {
 

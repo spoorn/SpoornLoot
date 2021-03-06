@@ -71,8 +71,7 @@ public class SwordRegistry {
         LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
             String namespace = id.getNamespace();
             String path = id.getPath();
-            if (id.getPath().contains("entities/sheep/white")
-                    || (LOOT_CHEST_ID.getNamespace().equals(namespace) && path != null && path.startsWith(LOOT_CHEST_ID.getPath()))) {
+            if (LOOT_CHEST_ID.getNamespace().equals(namespace) && path != null && path.startsWith(LOOT_CHEST_ID.getPath())) {
                 //log.info("### register loot pool for {}", id);
                 supplier.withPool(lootPool);
             }
