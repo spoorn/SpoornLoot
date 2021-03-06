@@ -3,9 +3,13 @@
   "id": "spoornloot",
   "version": "${version}",
   "name": "SpoornLoot",
-  "description": "",
-  "authors": [],
-  "contact": {},
+  "description": "Adds some spoorn loot.",
+  "authors": [
+    "spoorn"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/spoornloot"
+  },
   "license": "MIT",
   "icon": "assets/spoornloot/textures/item/spoorn_sword.png",
   "environment": "*",
@@ -21,8 +25,10 @@
     "spoornloot.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.11.2",
+    "fabricloader": "*",
     "fabric": "*",
-    "minecraft": "1.16.5"
+    "minecraft": ">=1.16.1",
+    "cloth-config2": "*",
+    "autoconfig1u": "*"
   }
 }

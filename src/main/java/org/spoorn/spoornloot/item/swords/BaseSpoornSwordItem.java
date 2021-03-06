@@ -2,6 +2,7 @@ package org.spoorn.spoornloot.item.swords;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -36,5 +37,6 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
             ((MutableText)(tooltip.get(0))).setStyle(newStyle);
         }
         tooltip.add(new TranslatableText(this.getTranslationKey() + ".tooltip"));
+        super.appendTooltip(stack, world, tooltip, context);
     }
 }
