@@ -1,6 +1,8 @@
 package org.spoorn.spoornloot.item.swords;
 
 import lombok.extern.log4j.Log4j2;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.Identifier;
@@ -31,5 +33,11 @@ public class LannisterSwordItem extends BaseSpoornSwordItem {
 
     public LannisterSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, DEFAULT_SPOORN_RARITY, settings);
+    }
+
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        target.setOnFireFor(5);
+        return super.postHit(stack, target, attacker);
     }
 }

@@ -28,7 +28,6 @@
     "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">=1.16.1",
-    "cloth-config2": "*",
-    "autoconfig1u": "*"
+    "cloth-config2": "*"
   }
 }

@@ -1,18 +1,35 @@
 package org.spoorn.spoornloot.item.swords;
 
+import com.google.common.collect.Multimap;
 import lombok.extern.log4j.Log4j2;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityGroup;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.item.Item;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornloot.config.ModConfig;
+import org.spoorn.spoornloot.util.SpoornUtil;
 
 import java.util.HashSet;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Log4j2
 public class SwordRegistry {
@@ -35,6 +52,7 @@ public class SwordRegistry {
         spoornSwords = new HashSet<>();
         registerSwords();
         initSwordLootPools();
+        applyCritCallback();
     }
 
     private static void registerSwords() {
@@ -52,6 +70,41 @@ public class SwordRegistry {
     private static void addSwordToRegistry(Identifier identifier, BaseSpoornSwordItem item) {
         Registry.register(Registry.ITEM, identifier, item);
         spoornSwords.add(item);
+    }
+
+    // Fetch crit data from NBT and apply crit damage
+    private static void applyCritCallback() {
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            Item item = player.getMainHandStack().getItem();
+            if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
+                BaseSpoornSwordItem spoornSwordItem = (BaseSpoornSwordItem) item;
+                CompoundTag compoundTag = player.getMainHandStack().getTag();
+                if (compoundTag == null || !compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
+                    log.error("Could not find CritChance data on Spoorn Sword.  This should not happen!");
+                    return ActionResult.PASS;
+                }
+                float critChance = compoundTag.getFloat(SpoornUtil.CRIT_CHANCE);
+                float randFloat = new Random().nextFloat();
+                //log.error("### critchance={}", critChance);
+                if (randFloat < critChance) {
+                    AtomicReference<Float> damage = new AtomicReference<>(0.0f);
+                    Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers =
+                            spoornSwordItem.getAttributeModifiers(EquipmentSlot.MAINHAND);
+                    if (attributeModifiers.containsKey(EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
+                        attributeModifiers.get(EntityAttributes.GENERIC_ATTACK_DAMAGE)
+                                .forEach((entityAttributeModifier -> {
+                                    damage.updateAndGet(v -> new Float((float)(v + entityAttributeModifier.getValue())));
+                                    //log.error("### updating with={}", entityAttributeModifier.getValue());
+                                }));
+                    }
+                    // Damage shown on tooltip is player + item + enchantments damage.  Got this from ItemStack.java
+                    float playerDamage = (float)player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+                    float enchantmentDamage = EnchantmentHelper.getAttackDamage(player.getMainHandStack(), EntityGroup.DEFAULT);
+                    entity.damage(DamageSource.player(player), (damage.get() + playerDamage + enchantmentDamage) * 1.5f);
+                }
+            }
+            return ActionResult.PASS;
+        });
     }
 
     private static void initSwordLootPools() {
