@@ -8,5 +8,5 @@ public class ServerConfig {
     public int swordSpawnInLootChestsChance = 10;
 
     @Comment("Chance for swords to have a lightning enchantment [1/value]")
-    public int lightningAffinityChance = 200;
+    public int lightningAffinityChance = 100;
 }
