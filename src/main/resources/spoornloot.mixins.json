@@ -7,7 +7,8 @@
   ],
   "client": [
     "InGameHudMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "LootTableMixin"
   ],
   "injectors": {
     "defaultRequire": 1

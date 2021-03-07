@@ -3,6 +3,7 @@ package org.spoorn.spoornloot.mixin;
 import static org.spoorn.spoornloot.util.SpoornUtil.CRIT_CHANCE_ENTITY_ATTRIBUTE;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.entity.EquipmentSlot;
@@ -45,7 +46,8 @@ public abstract class ItemStackMixin {
             if (compoundTag != null && compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
                 Multimap<EntityAttribute, EntityAttributeModifier> multimap = cir.getReturnValue();
                 if (!multimap.containsKey(CRIT_CHANCE_ENTITY_ATTRIBUTE)) {
-                    Multimap<EntityAttribute, EntityAttributeModifier> mutableMultimap = HashMultimap.create(multimap);
+                    // use LinkedListMultimap to keep ordering of native Attributes
+                    Multimap<EntityAttribute, EntityAttributeModifier> mutableMultimap = LinkedListMultimap.create(multimap);
                     mutableMultimap.put(
                             CRIT_CHANCE_ENTITY_ATTRIBUTE,
                             new EntityAttributeModifier(UUID.randomUUID(), "Crit chance",
