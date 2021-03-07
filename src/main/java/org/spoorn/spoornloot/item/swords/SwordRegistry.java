@@ -6,9 +6,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityGroup;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -26,7 +24,6 @@ import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.util.SpoornUtil;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -52,7 +49,8 @@ public class SwordRegistry {
         spoornSwords = new HashSet<>();
         registerSwords();
         initSwordLootPools();
-        applyCritCallback();
+        registerCritCallback();
+        registerLightningCallback();
     }
 
     private static void registerSwords() {
@@ -73,7 +71,7 @@ public class SwordRegistry {
     }
 
     // Fetch crit data from NBT and apply crit damage
-    private static void applyCritCallback() {
+    private static void registerCritCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
             if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
@@ -103,6 +101,29 @@ public class SwordRegistry {
                     entity.damage(DamageSource.player(player), (damage.get() + playerDamage + enchantmentDamage) * 1.5f);
                 }
             }
+            return ActionResult.PASS;
+        });
+    }
+
+    // Fetch lightning data from NBT and apply lightning
+    private static void registerLightningCallback() {
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            Item item = player.getMainHandStack().getItem();
+            if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
+                CompoundTag compoundTag = player.getMainHandStack().getTag();
+                if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
+                    log.warn("Could not find LightningAffinity data on Spoorn Sword.");
+                    return ActionResult.PASS;
+                }
+                if (compoundTag.getBoolean(SpoornUtil.LIGHTNING_AFFINITY)) {
+                    LightningEntity lightningEntity = EntityType.LIGHTNING_BOLT.create(world);
+                    lightningEntity.teleport(entity.getX(), entity.getY(), entity.getZ());
+                    world.spawnEntity(lightningEntity);
+                    //log.info("Lightning strike at [{}, {}, {}] from SpoornLoot",
+                    //    entity.getX(), entity.getY(), entity.getZ());
+                }
+            }
+
             return ActionResult.PASS;
         });
     }

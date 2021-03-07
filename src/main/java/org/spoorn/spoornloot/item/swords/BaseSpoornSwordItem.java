@@ -6,9 +6,11 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.spoorn.spoornloot.util.SpoornUtil;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
 import java.util.List;
@@ -39,6 +41,18 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
 
         // Add custom lore
         tooltip.add(new TranslatableText(this.getTranslationKey() + ".tooltip"));
+
+        // Add lightning affinity
+        if (stack.hasTag()) {
+            CompoundTag compoundTag = stack.getTag();
+            boolean hasLightningAffinity = compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)
+                ? compoundTag.getBoolean(SpoornUtil.LIGHTNING_AFFINITY) : false;
+            if (hasLightningAffinity) {
+                Style style = Style.EMPTY.withColor(TextColor.fromRgb(15990666));
+                //tooltip.add(new LiteralText(" "));
+                tooltip.add(new TranslatableText(SpoornUtil.LIGHTNING_AFFINITY_ID).setStyle(style));
+            }
+        }
 
         super.appendTooltip(stack, world, tooltip, context);
     }

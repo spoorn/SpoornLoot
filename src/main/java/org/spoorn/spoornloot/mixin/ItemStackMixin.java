@@ -1,7 +1,7 @@
 package org.spoorn.spoornloot.mixin;
 
-import static org.spoorn.spoornloot.util.SpoornUtil.CRIT_CHANCE_ENTITY_ATTRIBUTE;
-import com.google.common.collect.HashMultimap;
+import static org.spoorn.spoornloot.util.SpoornUtil.AttributeInfo;
+import static org.spoorn.spoornloot.util.SpoornUtil.ENTITY_ATTRIBUTES;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -11,22 +11,29 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spoorn.spoornloot.util.SpoornUtil;
 
+import java.util.Map;
 import java.util.UUID;
 
-@Log4j2
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
 
+    private static final Logger log = LogManager.getLogger("ItemStackMixin");
+
     @Shadow @Nullable public abstract CompoundTag getTag();
 
+    /**
+     * Adds my attribute modifiers when ItemStack.getAttributeModifiers() is called.  This is to make sure the
+     * Tooltip is rendered correctly with the new attributes.
+     */
     @Inject(method="getAttributeModifiers", at=@At(value="TAIL"), cancellable = true)
     public void addMoreAttributeModifiers(EquipmentSlot equipmentSlot,
         CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
@@ -43,17 +50,22 @@ public abstract class ItemStackMixin {
          */
         if (EquipmentSlot.MAINHAND == equipmentSlot) {
             CompoundTag compoundTag = this.getTag();
-            if (compoundTag != null && compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
+            if (compoundTag != null) {
                 Multimap<EntityAttribute, EntityAttributeModifier> multimap = cir.getReturnValue();
-                if (!multimap.containsKey(CRIT_CHANCE_ENTITY_ATTRIBUTE)) {
-                    // use LinkedListMultimap to keep ordering of native Attributes
-                    Multimap<EntityAttribute, EntityAttributeModifier> mutableMultimap = LinkedListMultimap.create(multimap);
-                    mutableMultimap.put(
-                            CRIT_CHANCE_ENTITY_ATTRIBUTE,
-                            new EntityAttributeModifier(UUID.randomUUID(), "Crit chance",
-                                    compoundTag.getFloat(SpoornUtil.CRIT_CHANCE) * 100, EntityAttributeModifier.Operation.ADDITION));
-                    cir.setReturnValue(ImmutableMultimap.copyOf(mutableMultimap));
+                Multimap<EntityAttribute, EntityAttributeModifier> mutableMultimap = LinkedListMultimap.create(multimap);
+                for (Map.Entry<EntityAttribute, AttributeInfo> entry : ENTITY_ATTRIBUTES.entrySet()) {
+                    AttributeInfo attributeInfo = entry.getValue();
+                    if (!multimap.containsKey(entry.getKey()) && compoundTag.contains(attributeInfo.getTagName())) {
+                        float modifiedAttribute =
+                            attributeInfo.getModifierFunction().apply(compoundTag.getFloat(attributeInfo.getTagName()));
+                        //log.info("Adding attribute [{}]={}", attributeInfo.getTagName(), modifiedAttribute);
+                        mutableMultimap.put(
+                            entry.getKey(),
+                            new EntityAttributeModifier(UUID.randomUUID(), attributeInfo.getName(),
+                                    modifiedAttribute, EntityAttributeModifier.Operation.ADDITION));
+                    }
                 }
+                cir.setReturnValue(ImmutableMultimap.copyOf(mutableMultimap));
             }
         }
     }
