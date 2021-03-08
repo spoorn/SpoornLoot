@@ -3,6 +3,7 @@ package org.spoorn.spoornloot.item.swords;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
@@ -44,16 +45,25 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
 
         // Add lightning affinity
         if (stack.hasTag()) {
-            CompoundTag compoundTag = stack.getTag();
-            boolean hasLightningAffinity = compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)
-                ? compoundTag.getBoolean(SpoornUtil.LIGHTNING_AFFINITY) : false;
-            if (hasLightningAffinity) {
-                Style style = Style.EMPTY.withColor(TextColor.fromRgb(15990666));
-                //tooltip.add(new LiteralText(" "));
-                tooltip.add(new TranslatableText(SpoornUtil.LIGHTNING_AFFINITY_ID).setStyle(style));
+            CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(stack, false);
+            if (compoundTag != null) {
+                boolean hasLightningAffinity = compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)
+                        ? compoundTag.getBoolean(SpoornUtil.LIGHTNING_AFFINITY) : false;
+                if (hasLightningAffinity) {
+                    Style style = Style.EMPTY.withColor(TextColor.fromRgb(15990666));
+                    //tooltip.add(new LiteralText(" "));
+                    tooltip.add(new TranslatableText(SpoornUtil.LIGHTNING_AFFINITY_ID).setStyle(style));
+                }
             }
         }
-
         super.appendTooltip(stack, world, tooltip, context);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
+        // Item attributes are calculated when loot is generated for loot chests.  This is a fallback in case the loot
+        // came from somewhere else such as a mob drop.
+        SpoornUtil.addSwordAttributes(stack);
+        super.inventoryTick(stack, world, entity, slot, selected);
     }
 }

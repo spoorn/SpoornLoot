@@ -76,7 +76,7 @@ public class SwordRegistry {
             Item item = player.getMainHandStack().getItem();
             if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
                 BaseSpoornSwordItem spoornSwordItem = (BaseSpoornSwordItem) item;
-                CompoundTag compoundTag = player.getMainHandStack().getTag();
+                CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
                     log.error("Could not find CritChance data on Spoorn Sword.  This should not happen!");
                     return ActionResult.PASS;
@@ -145,10 +145,10 @@ public class SwordRegistry {
         LootTableLoadingCallback.EVENT.register((resourceManager, lootManager, id, supplier, setter) -> {
             String namespace = id.getNamespace();
             String path = id.getPath();
-            if (LOOT_CHEST_ID.getNamespace().equals(namespace) && path != null && path.startsWith(LOOT_CHEST_ID.getPath())) {
+            //if (LOOT_CHEST_ID.getNamespace().equals(namespace) && path != null && path.startsWith(LOOT_CHEST_ID.getPath())) {
                 //log.info("### register loot pool for {}", id);
                 supplier.withPool(lootPool);
-            }
+            //}
         });
     }
 }

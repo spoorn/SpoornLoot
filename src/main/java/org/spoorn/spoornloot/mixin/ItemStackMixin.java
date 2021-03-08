@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spoorn.spoornloot.util.SpoornUtil;
 
 import java.util.Map;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public abstract class ItemStackMixin {
             So we have to make the multimap immutable first, add our attributes and inject that into the return.
          */
         if (EquipmentSlot.MAINHAND == equipmentSlot) {
-            CompoundTag compoundTag = this.getTag();
+            CompoundTag compoundTag = SpoornUtil.getAndCreateSpoornCompoundTag(this.getTag());
             if (compoundTag != null) {
                 Multimap<EntityAttribute, EntityAttributeModifier> multimap = cir.getReturnValue();
                 Multimap<EntityAttribute, EntityAttributeModifier> mutableMultimap = LinkedListMultimap.create(multimap);

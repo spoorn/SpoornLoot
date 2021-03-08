@@ -34,26 +34,6 @@ public class LootTableMixin {
     @Inject(method="generateLoot(Lnet/minecraft/loot/context/LootContext;)Ljava/util/List;", at=@At("TAIL"))
     public void addAttributesToSpoornItems(LootContext context, CallbackInfoReturnable<List<ItemStack>> cir) {
         List<ItemStack> itemStacks = cir.getReturnValue();
-        for (ItemStack stack : itemStacks) {
-            if (stack.getItem() instanceof BaseSpoornSwordItem) {
-                CompoundTag compoundTag = stack.getOrCreateTag();
-                if (!compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
-                    int i = 0;
-                    // This mean and sd makes it so  there's a ~0.1% chance of getting above 90% crit chance
-                    float critChance = (float) SpoornUtil.getNextGaussian(20, 23.2, 0, 100) / 100;
-                    //log.info("Setting sword crit chance to {} for stack {}", critChance, stack);
-                    compoundTag.putFloat(SpoornUtil.CRIT_CHANCE, critChance);
-                }
-
-                if (!compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
-                    int i = 0;
-                    // This mean and sd makes it so  there's a ~0.1% chance of getting above 90% crit chance
-                    float lightningChance = SpoornUtil.RANDOM.nextFloat();
-                    //log.info("Sword lightning chance is {} for stack {}", lightningChance, stack);
-                    boolean hasLightningAffinity = lightningChance < (1.0/ModConfig.get().serverConfig.lightningAffinityChance);
-                    compoundTag.putBoolean(SpoornUtil.LIGHTNING_AFFINITY, hasLightningAffinity);
-                }
-            }
-        }
+        SpoornUtil.addSwordAttributes(itemStacks);
     }
 }
