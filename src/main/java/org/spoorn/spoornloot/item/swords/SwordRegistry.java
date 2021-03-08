@@ -12,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
@@ -52,7 +53,7 @@ public class SwordRegistry {
         spoornSwords = new HashSet<>();
         registerSwords();
         initSwordLootPools();
-        registerCritCallback();
+        registerSpoornAttributesCallback();
         registerLightningCallback();
         registerSoundEventsCallback();
     }
@@ -74,39 +75,81 @@ public class SwordRegistry {
         spoornSwords.add(item);
     }
 
-    // Fetch crit data from NBT and apply crit damage
-    private static void registerCritCallback() {
+    // Fetch data from NBT and apply damage modifiers
+    private static void registerSpoornAttributesCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            Item item = player.getMainHandStack().getItem();
-            if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
-                BaseSpoornSwordItem spoornSwordItem = (BaseSpoornSwordItem) item;
-                CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
-                if (compoundTag == null || !compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
-                    log.error("Could not find CritChance data on Spoorn Sword.  This should not happen!");
-                    return ActionResult.PASS;
-                }
-                float critChance = compoundTag.getFloat(SpoornUtil.CRIT_CHANCE);
-                float randFloat = new Random().nextFloat();
-                //log.error("### critchance={}", critChance);
-                if (randFloat < critChance) {
-                    AtomicReference<Float> damage = new AtomicReference<>(0.0f);
-                    Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers =
-                            spoornSwordItem.getAttributeModifiers(EquipmentSlot.MAINHAND);
-                    if (attributeModifiers.containsKey(EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
-                        attributeModifiers.get(EntityAttributes.GENERIC_ATTACK_DAMAGE)
-                                .forEach((entityAttributeModifier -> {
-                                    damage.updateAndGet(v -> new Float((float)(v + entityAttributeModifier.getValue())));
-                                    //log.error("### updating with={}", entityAttributeModifier.getValue());
-                                }));
+            if (!world.isClient) {
+                Item item = player.getMainHandStack().getItem();
+                if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
+                    CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
+                    if (compoundTag != null) {
+                        float damage = 0;
+                        damage += getCritDamage(player, item, compoundTag);
+                        //log.info("Crit damage: {}", damage);
+                        damage += getFireDamage(entity, compoundTag);
+                        if (damage > 0) {
+                            //log.info("Bonus damage from spoorn loot: {}", damage);
+                            damage += getBaseDamage(player, item);
+                            //log.info("Final damage: {}", damage);
+                            entity.damage(DamageSource.player(player), damage);
+                        }
+                    } else {
+                        log.error("Got NULL compoundTag when trying to register Spoorn Attributes for item [{}]",
+                                player.getMainHandStack());
                     }
-                    // Damage shown on tooltip is player + item + enchantments damage.  Got this from ItemStack.java
-                    float playerDamage = (float)player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-                    float enchantmentDamage = EnchantmentHelper.getAttackDamage(player.getMainHandStack(), EntityGroup.DEFAULT);
-                    entity.damage(DamageSource.player(player), (damage.get() + playerDamage + enchantmentDamage) * 1.5f);
                 }
             }
             return ActionResult.PASS;
         });
+    }
+
+    // Gets base damage
+    private static float getBaseDamage(PlayerEntity player, Item item) {
+        AtomicReference<Float> damage = new AtomicReference<>(0.0f);
+        Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers =
+                item.getAttributeModifiers(EquipmentSlot.MAINHAND);
+        if (attributeModifiers.containsKey(EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
+            attributeModifiers.get(EntityAttributes.GENERIC_ATTACK_DAMAGE)
+                    .forEach((entityAttributeModifier -> {
+                        damage.updateAndGet(v -> new Float((float)(v + entityAttributeModifier.getValue())));
+                        //log.error("### updating with={}", entityAttributeModifier.getValue());
+                    }));
+        }
+        // Damage shown on tooltip is player + item + enchantments damage.  Got this from ItemStack.java
+        float playerDamage = (float)player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        float enchantmentDamage = EnchantmentHelper.getAttackDamage(player.getMainHandStack(), EntityGroup.DEFAULT);
+        return damage.get() + playerDamage + enchantmentDamage;
+    }
+
+    // Get bonus damage that comes from crit
+    private static float getCritDamage(PlayerEntity player, Item item, CompoundTag compoundTag) {
+        if (compoundTag == null || !compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
+            log.error("Could not find CritChance data on Spoorn Sword.  This should not happen!");
+            return 0;
+        }
+        float critChance = compoundTag.getFloat(SpoornUtil.CRIT_CHANCE);
+        float randFloat = new Random().nextFloat();
+        //log.error("### critchance={}", critChance);
+        if (randFloat < critChance) {
+            return getBaseDamage(player, item) * 0.5f;
+        }
+
+        return 0;
+    }
+
+    // Get bonus damage from fire damage and set target on fire
+    private static float getFireDamage(Entity entity, CompoundTag compoundTag) {
+        if (compoundTag == null || !compoundTag.contains(SpoornUtil.FIRE_DAMAGE)) {
+            log.error("Could not find FireDamage data on Spoorn Sword.  This should not happen!");
+            return 0;
+        }
+
+        float fireDamage = compoundTag.getFloat(SpoornUtil.FIRE_DAMAGE);
+        //log.info("Fire damage: {}", fireDamage);
+        if (fireDamage > 0 && entity.isLiving()) {
+            entity.setOnFireFor(5);
+        }
+        return fireDamage;
     }
 
     // Fetch lightning data from NBT and apply lightning
@@ -114,9 +157,9 @@ public class SwordRegistry {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
             if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
-                CompoundTag compoundTag = player.getMainHandStack().getTag();
+                CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
-                    log.warn("Could not find LightningAffinity data on Spoorn Sword.");
+                    log.error("Could not find LightningAffinity data on Spoorn Sword.");
                     return ActionResult.PASS;
                 }
                 if (compoundTag.getBoolean(SpoornUtil.LIGHTNING_AFFINITY)) {

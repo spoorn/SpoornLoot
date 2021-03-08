@@ -50,7 +50,7 @@ public abstract class ItemStackMixin {
             So we have to make the multimap immutable first, add our attributes and inject that into the return.
          */
         if (EquipmentSlot.MAINHAND == equipmentSlot) {
-            CompoundTag compoundTag = SpoornUtil.getAndCreateSpoornCompoundTag(this.getTag());
+            CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(this.getTag(), false);
             if (compoundTag != null) {
                 Multimap<EntityAttribute, EntityAttributeModifier> multimap = cir.getReturnValue();
                 Multimap<EntityAttribute, EntityAttributeModifier> mutableMultimap = LinkedListMultimap.create(multimap);

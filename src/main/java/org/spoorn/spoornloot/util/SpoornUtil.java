@@ -14,7 +14,6 @@ import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.item.swords.BaseSpoornSwordItem;
 import org.spoorn.spoornloot.item.swords.SwordRegistry;
-import org.spoorn.spoornloot.mixin.ItemStackMixin;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +31,9 @@ public final class SpoornUtil {
     public static final String CRIT_WEAPON_MODIFIER = "Crit Chance";
     public static final String LIGHTNING_AFFINITY = "lightningAffinity";
     public static final String LIGHTNING_AFFINITY_ID = "item.spoornloot.lightning_affinity";
+    public static final String FIRE_DAMAGE = "fireDamage";
+    public static final String FIRE_DAMAGE_ID = "spoornloot.fire_damage";
+    public static final String FIRE_DAMAGE_WEAPON_MODIFIER = "Fire Damage";
     public static final String SPOORN_NBT_TAG_NAME = "spoornConfig";
     /*public static final String LIGHTNING_CHANCE = "lightningChance";
     public static final String LIGHTNING_CHANCE_ID = "spoornloot.lightning_chance";
@@ -49,6 +51,12 @@ public final class SpoornUtil {
         new ClampedEntityAttribute(SpoornUtil.CRIT_WEAPON_MODIFIER, 0.0f, 0.0f, 1.0f).setTracked(true)
     );
 
+    public static final EntityAttribute FIRE_DAMAGE_ENTITY_ATTRIBUTE = register(
+        FIRE_DAMAGE_ID,
+        new ClampedEntityAttribute(SpoornUtil.FIRE_DAMAGE_WEAPON_MODIFIER, 0.0f, 0.0f,
+            ModConfig.get().serverConfig.maxSwordFireDamage).setTracked(true)
+    );
+
     /*public static final EntityAttribute LIGHTNING_CHANCE_ENTITY_ATTRIBUTE = register(
             LIGHTNING_CHANCE_ID,
             new ClampedEntityAttribute(SpoornUtil.LIGHTNING_WEAPON_MODIFIER, 0.0f, 0.0f, 1.0f).setTracked(true)
@@ -60,6 +68,8 @@ public final class SpoornUtil {
         Map<EntityAttribute, AttributeInfo> localMap = new HashMap<>();
         localMap.put(CRIT_CHANCE_ENTITY_ATTRIBUTE,
             new AttributeInfo(CRIT_WEAPON_MODIFIER, CRIT_CHANCE, (x) -> x * 100));
+        localMap.put(FIRE_DAMAGE_ENTITY_ATTRIBUTE,
+                new AttributeInfo(FIRE_DAMAGE_WEAPON_MODIFIER, FIRE_DAMAGE, Function.identity()));
         /*localMap.put(LIGHTNING_CHANCE_ENTITY_ATTRIBUTE,
             new AttributeInfo(LIGHTNING_WEAPON_MODIFIER, LIGHTNING_CHANCE, (x) -> x * 100));*/
         ENTITY_ATTRIBUTES = ImmutableMap.copyOf(localMap);
@@ -91,16 +101,20 @@ public final class SpoornUtil {
             log.warn("ItemStack does not have a tag, but createItemStackTagIfNotExists=false");
             return null;
         }
-        return getAndCreateSpoornCompoundTag(stack.getOrCreateTag());
+        return getOrCreateSpoornCompoundTag(stack.getTag(), createItemStackTagIfNotExists);
     }
 
-    public static CompoundTag getAndCreateSpoornCompoundTag(CompoundTag compoundTag) {
+    public static CompoundTag getOrCreateSpoornCompoundTag(CompoundTag compoundTag, boolean createItemStackTagIfNotExists) {
         if (compoundTag == null) {
             //log.warn("Can't get Spoorn NBT data from NULL compoundTag!");
             return null;
         }
         if (!compoundTag.contains(SPOORN_NBT_TAG_NAME, compoundTag.getType())) {
-            compoundTag.put(SPOORN_NBT_TAG_NAME, new CompoundTag());
+            if (createItemStackTagIfNotExists) {
+                compoundTag.put(SPOORN_NBT_TAG_NAME, new CompoundTag());
+            } else {
+                return null;
+            }
         }
         return compoundTag.getCompound(SPOORN_NBT_TAG_NAME);
     }
@@ -108,23 +122,35 @@ public final class SpoornUtil {
     public static void addSwordAttributes(ItemStack stack) {
         if (stack.getItem() instanceof BaseSpoornSwordItem) {
             CompoundTag compoundTag = getOrCreateSpoornCompoundTag(stack);
-            if (!compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
-                float randFloat = SpoornUtil.RANDOM.nextFloat();
+            if (!compoundTag.contains(CRIT_CHANCE)) {
+                float randFloat = RANDOM.nextFloat();
                 if (randFloat < (1.0 / ModConfig.get().serverConfig.critChanceChance)) {
                     // This mean and sd makes it so  there's a ~0.1% chance of getting above 90% crit chance
-                    float critChance = (float) SpoornUtil.getNextGaussian(25, 20, 20, 100) / 100;
+                    float critChance = (float) getNextGaussian(25, 20, 20, 100) / 100;
                     //log.info("Setting sword crit chance to {} for stack {}", critChance, stack);
-                    compoundTag.putFloat(SpoornUtil.CRIT_CHANCE, critChance);
+                    compoundTag.putFloat(CRIT_CHANCE, critChance);
                 } else {
-                    compoundTag.putFloat(SpoornUtil.CRIT_CHANCE, 0);
+                    compoundTag.putFloat(CRIT_CHANCE, 0);
                 }
             }
 
-            if (!compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
-                float lightningChance = SpoornUtil.RANDOM.nextFloat();
+            if (!compoundTag.contains(LIGHTNING_AFFINITY)) {
+                float lightningChance = RANDOM.nextFloat();
                 //log.info("Sword lightning chance is {} for stack {}", lightningChance, stack);
                 boolean hasLightningAffinity = lightningChance < (1.0 / ModConfig.get().serverConfig.lightningAffinityChance);
-                compoundTag.putBoolean(SpoornUtil.LIGHTNING_AFFINITY, hasLightningAffinity);
+                compoundTag.putBoolean(LIGHTNING_AFFINITY, hasLightningAffinity);
+            }
+
+            if (!compoundTag.contains(FIRE_DAMAGE)) {
+                float fireChance = RANDOM.nextFloat();
+                if (fireChance < (1.0 / ModConfig.get().serverConfig.fireDamageChance)) {
+                    // This mean and sd makes it so  there's a ~9% chance of getting above 5 fire damage
+                    float fireDamage = (float) getNextGaussian(1, 3, 1, ModConfig.get().serverConfig.maxSwordFireDamage);
+                    //log.info("Setting sword fire damage to {} for stack {}", fireDamage, stack);
+                    compoundTag.putFloat(FIRE_DAMAGE, fireDamage);
+                } else {
+                    compoundTag.putFloat(FIRE_DAMAGE, 0);
+                }
             }
         }
     }

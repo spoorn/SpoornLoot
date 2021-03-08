@@ -1,18 +1,14 @@
 package org.spoorn.spoornloot.mixin;
 
-import lombok.extern.log4j.Log4j2;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContext;
-import net.minecraft.nbt.CompoundTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spoorn.spoornloot.config.ModConfig;
-import org.spoorn.spoornloot.item.swords.BaseSpoornSwordItem;
 import org.spoorn.spoornloot.util.SpoornUtil;
 
 import java.util.List;
