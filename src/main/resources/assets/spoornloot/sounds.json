@@ -1,0 +1,26 @@
+{
+  "spoorn_sword_hit_char": {
+    "sounds" : [
+      "spoornloot:sword_hit_char1",
+      "spoornloot:sword_hit_char2",
+      "spoornloot:sword_hit_char3",
+      "spoornloot:sword_hit_char4",
+      "spoornloot:sword_hit_char5",
+      "spoornloot:sword_hit_char6",
+      "spoornloot:sword_hit_char7",
+      "spoornloot:sword_hit_char8",
+      "spoornloot:sword_hit_char9",
+      "spoornloot:sword_hit_char10",
+      "spoornloot:sword_hit_char11"
+    ]
+  },
+  "spoorn_sword_hit_env": {
+    "sounds" : [
+      "spoornloot:sword_hit_env1",
+      "spoornloot:sword_hit_env2",
+      "spoornloot:sword_hit_env3",
+      "spoornloot:sword_hit_env4",
+      "spoornloot:sword_hit_env5"
+    ]
+  }
+}

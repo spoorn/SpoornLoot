@@ -1,0 +1,19 @@
+package org.spoorn.spoornloot.sounds;
+
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import org.spoorn.spoornloot.util.SpoornUtil;
+
+public class SpoornSoundsUtil {
+
+    public static final Identifier SPOORN_SWORD_HIT_CHAR_ID = new Identifier(SpoornUtil.MODID, "spoorn_sword_hit_char");
+    public static final Identifier SPOORN_SWORD_HIT_ENV_ID = new Identifier(SpoornUtil.MODID, "spoorn_sword_hit_env");
+
+    public static final SoundEvent SPOORN_SWORD_HIT_CHAR_SOUND = registerSoundEvent(new SoundEvent(SPOORN_SWORD_HIT_CHAR_ID));
+    public static final SoundEvent SPOORN_SWORD_HIT_ENV_SOUND = registerSoundEvent(new SoundEvent(SPOORN_SWORD_HIT_ENV_ID));
+
+    private static SoundEvent registerSoundEvent(SoundEvent soundEvent) {
+        return Registry.register(Registry.SOUND_EVENT, soundEvent.getId(), soundEvent);
+    }
+}

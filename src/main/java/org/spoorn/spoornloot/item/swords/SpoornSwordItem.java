@@ -2,6 +2,7 @@ package org.spoorn.spoornloot.item.swords;
 
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;

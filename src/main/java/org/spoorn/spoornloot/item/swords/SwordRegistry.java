@@ -2,6 +2,7 @@ package org.spoorn.spoornloot.item.swords;
 
 import com.google.common.collect.Multimap;
 import lombok.extern.log4j.Log4j2;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
@@ -17,10 +18,12 @@ import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornloot.config.ModConfig;
+import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 import org.spoorn.spoornloot.util.SpoornUtil;
 
 import java.util.HashSet;
@@ -51,6 +54,7 @@ public class SwordRegistry {
         initSwordLootPools();
         registerCritCallback();
         registerLightningCallback();
+        registerSoundEventsCallback();
     }
 
     private static void registerSwords() {
@@ -109,7 +113,7 @@ public class SwordRegistry {
     private static void registerLightningCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
-            if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
+            if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
                 CompoundTag compoundTag = player.getMainHandStack().getTag();
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
                     log.warn("Could not find LightningAffinity data on Spoorn Sword.");
@@ -124,6 +128,42 @@ public class SwordRegistry {
                 }
             }
 
+            return ActionResult.PASS;
+        });
+    }
+
+    private static void registerSoundEventsCallback() {
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (!world.isClient()) {
+                Item item = player.getMainHandStack().getItem();
+                if (item instanceof SpoornSwordItem && entity.isLiving()) {
+                    world.playSound(
+                        null,
+                        player.getBlockPos(),
+                        SpoornSoundsUtil.SPOORN_SWORD_HIT_CHAR_SOUND,
+                        SoundCategory.PLAYERS,
+                        0.4f,
+                        1f
+                    );
+                }
+            }
+            return ActionResult.PASS;
+        });
+
+        AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
+            if (!world.isClient()) {
+                Item item = player.getMainHandStack().getItem();
+                if (item instanceof SpoornSwordItem) {
+                    world.playSound(
+                            null,
+                            player.getBlockPos(),
+                            SpoornSoundsUtil.SPOORN_SWORD_HIT_ENV_SOUND,
+                            SoundCategory.PLAYERS,
+                            0.4f,
+                            1f
+                    );
+                }
+            }
             return ActionResult.PASS;
         });
     }
