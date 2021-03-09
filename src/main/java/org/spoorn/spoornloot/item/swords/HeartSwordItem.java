@@ -36,7 +36,7 @@ public class HeartSwordItem extends BaseSpoornSwordItem {
 
     public HeartSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, DEFAULT_SPOORN_RARITY, settings);
-        registerSounds();
+        registerHitMechanics();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class HeartSwordItem extends BaseSpoornSwordItem {
         return TypedActionResult.pass(stack);
     }
 
-    private void registerSounds() {
+    private void registerHitMechanics() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack stack = player.getMainHandStack();
             boolean rightSituation = stack.getItem() instanceof HeartSwordItem && entity.isLiving();
@@ -75,7 +75,7 @@ public class HeartSwordItem extends BaseSpoornSwordItem {
                     );
                     stack.setCooldown(80);
                 }
-            } else if (rightSituation && world.isClient()) {
+            } else if (rightSituation && world.isClient()) {    
                 for (int i = 0; i < 3; ++i) {
                     double d = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
                     double e = SpoornUtil.RANDOM.nextGaussian() * 0.02D;

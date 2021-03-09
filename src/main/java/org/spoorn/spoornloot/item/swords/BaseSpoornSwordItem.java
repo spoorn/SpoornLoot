@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
@@ -65,5 +66,32 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
         // came from somewhere else such as a mob drop.
         SpoornUtil.addSwordAttributes(stack);
         super.inventoryTick(stack, world, entity, slot, selected);
+    }
+
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        if (stack.getItem() instanceof BaseSpoornSwordItem) {
+            float lifesteal = getLifesteal(SpoornUtil.getOrCreateSpoornCompoundTag(stack, false)) / 100;
+            //log.info("Lifesteal: {}", lifesteal);
+            try {
+                float lastDamageTaken = target.getClass().getField(SpoornUtil.LAST_DAMAGE_TAKEN_FIELD).getFloat(target);
+                //log.info("Last damage taken: {}", lastDamageTaken);
+                //log.info("Heal amount: {}", lifesteal * lastDamageTaken);
+                attacker.heal(lifesteal * lastDamageTaken);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return super.postHit(stack, target, attacker);
+    }
+
+    // Get lifesteal from NBT
+    private static float getLifesteal(CompoundTag compoundTag) {
+        if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIFESTEAL)) {
+            log.error("Could not find Lifesteal data on Spoorn Sword.  This should not happen!");
+            return 0;
+        }
+
+        return compoundTag.getFloat(SpoornUtil.LIFESTEAL);
     }
 }

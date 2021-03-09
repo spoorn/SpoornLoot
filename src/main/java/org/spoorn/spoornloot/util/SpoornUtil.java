@@ -34,7 +34,11 @@ public final class SpoornUtil {
     public static final String FIRE_DAMAGE = "fireDamage";
     public static final String FIRE_DAMAGE_ID = "spoornloot.fire_damage";
     public static final String FIRE_DAMAGE_WEAPON_MODIFIER = "Fire Damage";
+    public static final String LIFESTEAL = "lifesteal";
+    public static final String LIFESTEAL_ID = "spoornloot.lifesteal";
+    public static final String LIFESTEAM_WEAPON_MODIFIER = "Lifesteal";
     public static final String SPOORN_NBT_TAG_NAME = "spoornConfig";
+    public static final String LAST_DAMAGE_TAKEN_FIELD = "lastDamageTaken";
     /*public static final String LIGHTNING_CHANCE = "lightningChance";
     public static final String LIGHTNING_CHANCE_ID = "spoornloot.lightning_chance";
     public static final String LIGHTNING_WEAPON_MODIFIER = "Lightning Chance";*/
@@ -57,6 +61,12 @@ public final class SpoornUtil {
             ModConfig.get().serverConfig.maxSwordFireDamage).setTracked(true)
     );
 
+    public static final EntityAttribute LIFESTEAL_ENTITY_ATTRIBUTE = register(
+            LIFESTEAL_ID,
+            new ClampedEntityAttribute(SpoornUtil.LIFESTEAM_WEAPON_MODIFIER, 0.0f, 0.0f,
+                    ModConfig.get().serverConfig.maxLifesteal).setTracked(true)
+    );
+
     /*public static final EntityAttribute LIGHTNING_CHANCE_ENTITY_ATTRIBUTE = register(
             LIGHTNING_CHANCE_ID,
             new ClampedEntityAttribute(SpoornUtil.LIGHTNING_WEAPON_MODIFIER, 0.0f, 0.0f, 1.0f).setTracked(true)
@@ -69,7 +79,9 @@ public final class SpoornUtil {
         localMap.put(CRIT_CHANCE_ENTITY_ATTRIBUTE,
             new AttributeInfo(CRIT_WEAPON_MODIFIER, CRIT_CHANCE, (x) -> x * 100));
         localMap.put(FIRE_DAMAGE_ENTITY_ATTRIBUTE,
-                new AttributeInfo(FIRE_DAMAGE_WEAPON_MODIFIER, FIRE_DAMAGE, Function.identity()));
+            new AttributeInfo(FIRE_DAMAGE_WEAPON_MODIFIER, FIRE_DAMAGE, Function.identity()));
+        localMap.put(LIFESTEAL_ENTITY_ATTRIBUTE,
+            new AttributeInfo(LIFESTEAM_WEAPON_MODIFIER, LIFESTEAL, Function.identity()));
         /*localMap.put(LIGHTNING_CHANCE_ENTITY_ATTRIBUTE,
             new AttributeInfo(LIGHTNING_WEAPON_MODIFIER, LIGHTNING_CHANCE, (x) -> x * 100));*/
         ENTITY_ATTRIBUTES = ImmutableMap.copyOf(localMap);
@@ -122,6 +134,8 @@ public final class SpoornUtil {
     public static void addSwordAttributes(ItemStack stack) {
         if (stack.getItem() instanceof BaseSpoornSwordItem) {
             CompoundTag compoundTag = getOrCreateSpoornCompoundTag(stack);
+
+            // Crit chance
             if (!compoundTag.contains(CRIT_CHANCE)) {
                 float randFloat = RANDOM.nextFloat();
                 if (randFloat < (1.0 / ModConfig.get().serverConfig.critChanceChance)) {
@@ -134,6 +148,7 @@ public final class SpoornUtil {
                 }
             }
 
+            // Lightning affinity
             if (!compoundTag.contains(LIGHTNING_AFFINITY)) {
                 float lightningChance = RANDOM.nextFloat();
                 //log.info("Sword lightning chance is {} for stack {}", lightningChance, stack);
@@ -141,6 +156,7 @@ public final class SpoornUtil {
                 compoundTag.putBoolean(LIGHTNING_AFFINITY, hasLightningAffinity);
             }
 
+            // Fire damage
             if (!compoundTag.contains(FIRE_DAMAGE)) {
                 float fireChance = RANDOM.nextFloat();
                 if (fireChance < (1.0 / ModConfig.get().serverConfig.fireDamageChance)) {
@@ -150,6 +166,19 @@ public final class SpoornUtil {
                     compoundTag.putFloat(FIRE_DAMAGE, fireDamage);
                 } else {
                     compoundTag.putFloat(FIRE_DAMAGE, 0);
+                }
+            }
+
+            // Lifesteal
+            if (!compoundTag.contains(LIFESTEAL)) {
+                float lifestealChance = RANDOM.nextFloat();
+                if (lifestealChance < (1.0 / ModConfig.get().serverConfig.lifestealChance)) {
+                    // This mean and sd makes it so  there's a ~10% chance of getting above 10 lifesteal
+                    float lifesteal = (float) getNextGaussian(5, 3.9, 0, ModConfig.get().serverConfig.maxLifesteal);
+                    //log.info("Setting sword fire damage to {} for stack {}", fireDamage, stack);
+                    compoundTag.putFloat(LIFESTEAL, lifesteal);
+                } else {
+                    compoundTag.putFloat(LIFESTEAL, 0);
                 }
             }
         }
