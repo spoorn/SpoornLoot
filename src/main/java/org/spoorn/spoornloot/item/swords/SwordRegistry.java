@@ -75,13 +75,13 @@ public class SwordRegistry {
         addSwordToRegistry(GreenSwordItem.IDENTIFIER, DEFAULT_GREEN_SWORD);
         addSwordToRegistry(HeartSwordItem.IDENTIFIER, DEFAULT_HEART_SWORD);
         addSwordToRegistry(LannisterSwordItem.IDENTIFIER, DEFAULT_LANNISTER_SWORD);
-        addSwordToRegistry(GreenSword2Item.IDENTIFIER, DEFAULT_GREEN_SWORD2);
+        /*addSwordToRegistry(GreenSword2Item.IDENTIFIER, DEFAULT_GREEN_SWORD2);
         addSwordToRegistry(HeartPurpleSwordItem.IDENTIFIER, DEFAULT_HEART_PURPLE_SWORD);
         addSwordToRegistry(PockyMatchaSwordItem.IDENTIFIER, DEFAULT_POCKY_MATCHA_SWORD);
         addSwordToRegistry(PockyStrawberrySwordItem.IDENTIFIER, DEFAULT_POCKY_STRAWBERRY_SWORD);
         addSwordToRegistry(PockySwordItem.IDENTIFIER, DEFAULT_POCKY_SWORD);
         addSwordToRegistry(RedSwordItem.IDENTIFIER, DEFAULT_RED_SWORD);
-        addSwordToRegistry(SwampSwordItem.IDENTIFIER, DEFAULT_SWAMP_SWORD);
+        addSwordToRegistry(SwampSwordItem.IDENTIFIER, DEFAULT_SWAMP_SWORD);*/
     }
 
     private static void addSwordToRegistry(Identifier identifier, BaseSpoornSwordItem item) {
