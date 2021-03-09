@@ -44,6 +44,13 @@ public class SwordRegistry {
     private static final BaseSpoornSwordItem DEFAULT_GREEN_SWORD = new GreenSwordItem();
     private static final BaseSpoornSwordItem DEFAULT_HEART_SWORD = new HeartSwordItem();
     private static final BaseSpoornSwordItem DEFAULT_LANNISTER_SWORD = new LannisterSwordItem();
+    private static final BaseSpoornSwordItem DEFAULT_GREEN_SWORD2 = new GreenSword2Item();
+    private static final BaseSpoornSwordItem DEFAULT_HEART_PURPLE_SWORD = new HeartPurpleSwordItem();
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_MATCHA_SWORD = new PockyMatchaSwordItem();
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_STRAWBERRY_SWORD = new PockyStrawberrySwordItem();
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_SWORD = new PockySwordItem();
+    private static final BaseSpoornSwordItem DEFAULT_RED_SWORD = new RedSwordItem();
+    private static final BaseSpoornSwordItem DEFAULT_SWAMP_SWORD = new SwampSwordItem();
 
     private static final Identifier LOOT_CHEST_ID = new Identifier("minecraft", "chests");
 
@@ -68,6 +75,13 @@ public class SwordRegistry {
         addSwordToRegistry(GreenSwordItem.IDENTIFIER, DEFAULT_GREEN_SWORD);
         addSwordToRegistry(HeartSwordItem.IDENTIFIER, DEFAULT_HEART_SWORD);
         addSwordToRegistry(LannisterSwordItem.IDENTIFIER, DEFAULT_LANNISTER_SWORD);
+        addSwordToRegistry(GreenSword2Item.IDENTIFIER, DEFAULT_GREEN_SWORD2);
+        addSwordToRegistry(HeartPurpleSwordItem.IDENTIFIER, DEFAULT_HEART_PURPLE_SWORD);
+        addSwordToRegistry(PockyMatchaSwordItem.IDENTIFIER, DEFAULT_POCKY_MATCHA_SWORD);
+        addSwordToRegistry(PockyStrawberrySwordItem.IDENTIFIER, DEFAULT_POCKY_STRAWBERRY_SWORD);
+        addSwordToRegistry(PockySwordItem.IDENTIFIER, DEFAULT_POCKY_SWORD);
+        addSwordToRegistry(RedSwordItem.IDENTIFIER, DEFAULT_RED_SWORD);
+        addSwordToRegistry(SwampSwordItem.IDENTIFIER, DEFAULT_SWAMP_SWORD);
     }
 
     private static void addSwordToRegistry(Identifier identifier, BaseSpoornSwordItem item) {

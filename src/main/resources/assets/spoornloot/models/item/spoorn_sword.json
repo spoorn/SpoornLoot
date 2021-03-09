@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "spoornloot:item/spoorn_sword"
+    "layer0": "spoornloot:item/spoorn_sword_2"
   }
 }

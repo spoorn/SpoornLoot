@@ -1,17 +1,15 @@
 package org.spoorn.spoornloot.item.swords;
 
+import static org.spoorn.spoornloot.util.SpoornUtil.MODID;
+import static org.spoorn.spoornloot.util.SpoornUtil.SPOORN_ITEM_GROUP;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
-import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
-
-import static org.spoorn.spoornloot.util.SpoornUtil.MODID;
-import static org.spoorn.spoornloot.util.SpoornUtil.SPOORN_ITEM_GROUP;
 
 @Log4j2
 public class LannisterSwordItem extends BaseSpoornSwordItem {
