@@ -5,13 +5,14 @@ import static org.spoorn.spoornloot.util.SpoornUtil.SPOORN_ITEM_GROUP;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
+import org.spoorn.spoornloot.util.SpoornUtil;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
@@ -60,17 +61,27 @@ public class HeartSwordItem extends BaseSpoornSwordItem {
 
     private void registerSounds() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (!world.isClient()) {
-                Item item = player.getMainHandStack().getItem();
-                if (item instanceof HeartSwordItem && entity.isLiving()) {
+            ItemStack stack = player.getMainHandStack();
+            boolean rightSituation = stack.getItem() instanceof HeartSwordItem && entity.isLiving();
+            if (rightSituation && !world.isClient()) {
+                if (stack.getCooldown() == 0) {
                     world.playSound(
                         null,
                         player.getBlockPos(),
                         SpoornSoundsUtil.SM_WAND_SOUND,
                         SoundCategory.PLAYERS,
-                        0.4f,
+                        0.3f,
                         1f
                     );
+                    stack.setCooldown(80);
+                }
+            } else if (rightSituation && world.isClient()) {
+                for (int i = 0; i < 3; ++i) {
+                    double d = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                    double e = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                    double f = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                    world.addParticle(ParticleTypes.HEART, entity.getParticleX(1.0D),
+                        entity.getRandomBodyY() + 0.5D, entity.getParticleZ(1.0D), d, e, f);
                 }
             }
             return ActionResult.PASS;
