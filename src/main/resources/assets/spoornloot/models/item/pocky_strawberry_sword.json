@@ -2,5 +2,27 @@
   "parent": "minecraft:item/handheld",
   "textures": {
     "layer0": "spoornloot:item/pocky_strawberry_sword"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, -90, 55],
+      "translation": [0, 6, 2],
+      "scale": [1.2, 1.2, 1.2]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [0, 90, -55],
+      "translation": [0, 6, 2],
+      "scale": [1.2, 1.2, 1.2]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, -90, 25],
+      "translation": [1, 5, 0],
+      "scale": [1.1, 1.1, 1.1]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 90, -25],
+      "translation": [1, 5, 0],
+      "scale": [1.1, 1.1, 1.1]
+    }
   }
 }

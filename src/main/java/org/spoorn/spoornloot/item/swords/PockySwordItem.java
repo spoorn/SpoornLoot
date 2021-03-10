@@ -2,6 +2,7 @@ package org.spoorn.spoornloot.item.swords;
 
 import static org.spoorn.spoornloot.util.SpoornUtil.MODID;
 import static org.spoorn.spoornloot.util.SpoornUtil.SPOORN_ITEM_GROUP;
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.Identifier;

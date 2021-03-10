@@ -27,7 +27,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if (!world.isClient()) {
+        if (!world.isClient() && stack.getItem() instanceof HeartPurpleSwordItem) {
             if (stack.getCooldown() == 0) {
                 world.playSound(
                         null,
@@ -48,7 +48,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack stack = player.getMainHandStack();
             boolean rightSituation = stack.getItem() instanceof BaseHeartSwordItem && entity.isLiving();
-            if (rightSituation && !world.isClient()) {
+            if (rightSituation && !world.isClient() && stack.getItem() instanceof HeartPurpleSwordItem) {
                 if (stack.getCooldown() == 0) {
                     world.playSound(
                             null,
@@ -61,7 +61,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
                     stack.setCooldown(80);
                 }
             } else if (rightSituation && world.isClient()) {
-                for (int i = 0; i < 3; ++i) {
+                for (int i = 0; i < 2; ++i) {
                     double d = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
                     double e = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
                     double f = SpoornUtil.RANDOM.nextGaussian() * 0.02D;

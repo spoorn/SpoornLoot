@@ -25,12 +25,24 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
+    // Reach distance
+    include modImplementation("com.jamieswhiteshirt:reach-entity-attributes:1.1.0")
+
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
 
 repositories {
+    // Cloth Config
     maven { url "https://maven.shedaniel.me/" }
+
+    // For Reach distance
+    maven {
+        url "https://maven.jamieswhiteshirt.com/libs-release"
+        content {
+            includeGroup "com.jamieswhiteshirt"
+        }
+    }
 }
 
 processResources {
