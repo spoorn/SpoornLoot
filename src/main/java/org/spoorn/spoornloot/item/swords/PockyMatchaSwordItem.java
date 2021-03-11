@@ -10,7 +10,7 @@ import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
 @Log4j2
-public class PockyMatchaSwordItem extends BaseSpoornSwordItem {
+public class PockyMatchaSwordItem extends BaseLongSwordItem {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "pocky_matcha_sword");
 
