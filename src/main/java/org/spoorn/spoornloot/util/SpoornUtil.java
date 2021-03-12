@@ -6,9 +6,12 @@ import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornloot.config.ModConfig;
@@ -21,6 +24,9 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * Random Utility for code shared between multiple classes.
+ */
 @Log4j2
 public final class SpoornUtil {
 
@@ -37,16 +43,17 @@ public final class SpoornUtil {
     public static final String LIFESTEAL = "lifesteal";
     public static final String LIFESTEAL_ID = "spoornloot.lifesteal";
     public static final String LIFESTEAM_WEAPON_MODIFIER = "Lifesteal";
+    public static final String EXPLOSIVE = "explosive";
+    public static final String EXPLOSIVE_ID = "item.spoornloot.explosive";
+    public static final DamageSource SPOORN_DMG_SRC = new SpoornDamageSource(EXPLOSIVE_ID);
     public static final String SPOORN_NBT_TAG_NAME = "spoornConfig";
     public static final String LAST_DAMAGE_TAKEN_FIELD = "lastDamageTaken";
-    /*public static final String LIGHTNING_CHANCE = "lightningChance";
-    public static final String LIGHTNING_CHANCE_ID = "spoornloot.lightning_chance";
-    public static final String LIGHTNING_WEAPON_MODIFIER = "Lightning Chance";*/
-    public static final String COMBAT = "combat";
     public static final Identifier COMBAT_IDENTIFIER = new Identifier(MODID, GENERAL);
     public static final ItemGroup SPOORN_ITEM_GROUP = FabricItemGroupBuilder.create(COMBAT_IDENTIFIER)
         .icon(() -> new ItemStack(SwordRegistry.DEFAULT_SPOORN_SWORD))
         .build();
+    public static final Style LIGHTNING_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(15990666));
+    public static final Style EXPLOSIVE_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(11337728));
 
     public static final Random RANDOM = new Random();
 
@@ -67,11 +74,6 @@ public final class SpoornUtil {
                     ModConfig.get().serverConfig.maxLifesteal).setTracked(true)
     );
 
-    /*public static final EntityAttribute LIGHTNING_CHANCE_ENTITY_ATTRIBUTE = register(
-            LIGHTNING_CHANCE_ID,
-            new ClampedEntityAttribute(SpoornUtil.LIGHTNING_WEAPON_MODIFIER, 0.0f, 0.0f, 1.0f).setTracked(true)
-    );*/
-
     public static final Map<EntityAttribute, AttributeInfo> ENTITY_ATTRIBUTES;
 
     static {
@@ -82,8 +84,6 @@ public final class SpoornUtil {
             new AttributeInfo(FIRE_DAMAGE_WEAPON_MODIFIER, FIRE_DAMAGE, Function.identity()));
         localMap.put(LIFESTEAL_ENTITY_ATTRIBUTE,
             new AttributeInfo(LIFESTEAM_WEAPON_MODIFIER, LIFESTEAL, Function.identity()));
-        /*localMap.put(LIGHTNING_CHANCE_ENTITY_ATTRIBUTE,
-            new AttributeInfo(LIGHTNING_WEAPON_MODIFIER, LIGHTNING_CHANCE, (x) -> x * 100));*/
         ENTITY_ATTRIBUTES = ImmutableMap.copyOf(localMap);
     }
 
@@ -180,6 +180,13 @@ public final class SpoornUtil {
                 } else {
                     compoundTag.putFloat(LIFESTEAL, 0);
                 }
+            }
+
+            // Explosive
+            if (!compoundTag.contains(EXPLOSIVE)) {
+                float explosiveChance = RANDOM.nextFloat();
+                boolean explosive = explosiveChance < (1.0 / ModConfig.get().serverConfig.explosiveChance);
+                compoundTag.putBoolean(EXPLOSIVE, explosive);
             }
         }
     }

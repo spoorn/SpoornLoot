@@ -2,6 +2,10 @@ package org.spoorn.spoornloot.util.rarity;
 
 import lombok.Getter;
 
+/**
+ * Custom Spoorn Rarities to control different properties related to rarity.  Minecraft's native Rarity is too
+ * limited and not extensible.
+ */
 public class SpoornRarity {
     public static final SpoornRarity COMMON = new SpoornRarity(13401901, 20, 300);
     public static final SpoornRarity UNCOMMON = new SpoornRarity(5950509, 10, 450);

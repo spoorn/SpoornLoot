@@ -24,4 +24,7 @@ public class ServerConfig {
 
     @Comment("Maximum lifesteam for swords [1/value] [default = 30]")
     public int maxLifesteal = 30;
+
+    @Comment("Chance for sword to be Explosive [1/value] [default = 200]")
+    public int explosiveChance = 200;
 }

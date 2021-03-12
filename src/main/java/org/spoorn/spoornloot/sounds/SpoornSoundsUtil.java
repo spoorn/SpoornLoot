@@ -5,6 +5,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornloot.util.SpoornUtil;
 
+/**
+ * Custom sounds.
+ */
 public class SpoornSoundsUtil {
 
     public static final Identifier SPOORN_SWORD_HIT_CHAR_ID = new Identifier(SpoornUtil.MODID, "spoorn_sword_hit_char");

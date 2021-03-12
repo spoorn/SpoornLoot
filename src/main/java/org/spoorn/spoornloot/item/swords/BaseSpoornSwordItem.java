@@ -44,16 +44,22 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
         // Add custom lore
         tooltip.add(new TranslatableText(this.getTranslationKey() + ".tooltip"));
 
-        // Add lightning affinity
+        // Add various attributes to tooltip
         if (stack.hasTag()) {
             CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(stack, false);
             if (compoundTag != null) {
+                // Lightning affinity tag on the tooltip
                 boolean hasLightningAffinity = compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)
                         ? compoundTag.getBoolean(SpoornUtil.LIGHTNING_AFFINITY) : false;
                 if (hasLightningAffinity) {
-                    Style style = Style.EMPTY.withColor(TextColor.fromRgb(15990666));
-                    //tooltip.add(new LiteralText(" "));
-                    tooltip.add(new TranslatableText(SpoornUtil.LIGHTNING_AFFINITY_ID).setStyle(style));
+                    tooltip.add(new TranslatableText(SpoornUtil.LIGHTNING_AFFINITY_ID).setStyle(SpoornUtil.LIGHTNING_STYLE));
+                }
+
+                // Explosive tag on the tooltip
+                boolean isExplosive = compoundTag.contains(SpoornUtil.EXPLOSIVE)
+                        ? compoundTag.getBoolean(SpoornUtil.EXPLOSIVE) : false;
+                if (isExplosive) {
+                    tooltip.add(new TranslatableText(SpoornUtil.EXPLOSIVE_ID).setStyle(SpoornUtil.EXPLOSIVE_STYLE));
                 }
             }
         }

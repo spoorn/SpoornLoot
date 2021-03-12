@@ -32,5 +32,6 @@
   "item.spoornloot.swamp_sword" : "Swampy",
   "item.spoornloot.swamp_sword.tooltip" : "§oSlime slicer",
   "item.spoornloot.lightning_affinity" : "Power of Thor",
+  "item.spoornloot.explosive" : "Explosive",
   "itemGroup.spoornloot.general" : "Spoorn Loot"
 }

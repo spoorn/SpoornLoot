@@ -23,6 +23,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.explosion.Explosion;
 import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 import org.spoorn.spoornloot.util.SpoornUtil;
@@ -62,6 +63,7 @@ public class SwordRegistry {
         initSwordLootPools();
         registerSpoornAttributesCallback();
         registerLightningCallback();
+        registerExplosiveCallback();
         registerSoundEventsCallback();
     }
 
@@ -182,6 +184,26 @@ public class SwordRegistry {
                     world.spawnEntity(lightningEntity);
                     //log.info("Lightning strike at [{}, {}, {}] from SpoornLoot",
                     //    entity.getX(), entity.getY(), entity.getZ());
+                }
+            }
+
+            return ActionResult.PASS;
+        });
+    }
+
+    // Fetch explosive data from NBT and apply explosion
+    private static void registerExplosiveCallback() {
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            Item item = player.getMainHandStack().getItem();
+            if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
+                CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
+                if (compoundTag == null || !compoundTag.contains(SpoornUtil.EXPLOSIVE)) {
+                    log.error("Could not find Explosive data on Spoorn Sword.");
+                    return ActionResult.PASS;
+                }
+                if (compoundTag.getBoolean(SpoornUtil.EXPLOSIVE)) {
+                    world.createExplosion(entity, SpoornUtil.SPOORN_DMG_SRC, null,
+                        entity.getX(), entity.getY(), entity.getZ(),1.5f, false, Explosion.DestructionType.NONE);
                 }
             }
 
