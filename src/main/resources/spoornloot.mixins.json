@@ -10,7 +10,8 @@
     "ItemStackMixin",
     "LootTableMixin",
     "PlayerEntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ExplosionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
