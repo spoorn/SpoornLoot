@@ -203,7 +203,7 @@ public class SwordRegistry {
                 }
                 if (compoundTag.getBoolean(SpoornUtil.EXPLOSIVE)) {
                     world.createExplosion(entity, SpoornUtil.SPOORN_DMG_SRC, null,
-                        entity.getX(), entity.getY(), entity.getZ(),1.5f, false, Explosion.DestructionType.NONE);
+                        entity.getX(), entity.getY(), entity.getZ(), 1.0f, false, Explosion.DestructionType.NONE);
                 }
             }
 
