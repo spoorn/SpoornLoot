@@ -47,7 +47,7 @@ public final class SpoornUtil {
     public static final String EXPLOSIVE_ID = "item.spoornloot.explosive";
     public static final DamageSource SPOORN_DMG_SRC = new SpoornDamageSource(EXPLOSIVE_ID);
     public static final String SPOORN_NBT_TAG_NAME = "spoornConfig";
-    public static final String LAST_DAMAGE_TAKEN_FIELD = "lastDamageTaken";
+    public static final String LAST_SPOORN_SOUND = "lastSpoornSound";
     public static final Identifier COMBAT_IDENTIFIER = new Identifier(MODID, GENERAL);
     public static final ItemGroup SPOORN_ITEM_GROUP = FabricItemGroupBuilder.create(COMBAT_IDENTIFIER)
         .icon(() -> new ItemStack(SwordRegistry.DEFAULT_SPOORN_SWORD))
@@ -104,8 +104,8 @@ public final class SpoornUtil {
         }
     }
 
-    public static CompoundTag getOrCreateSpoornCompoundTag(ItemStack stack) {
-        return getOrCreateSpoornCompoundTag(stack, true);
+    public static CompoundTag getButDontCreateSpoornCompoundTag(ItemStack stack) {
+        return getOrCreateSpoornCompoundTag(stack, false);
     }
 
     public static CompoundTag getOrCreateSpoornCompoundTag(ItemStack stack, boolean createItemStackTagIfNotExists) {
@@ -133,7 +133,7 @@ public final class SpoornUtil {
 
     public static void addSwordAttributes(ItemStack stack) {
         if (stack.getItem() instanceof BaseSpoornSwordItem) {
-            CompoundTag compoundTag = getOrCreateSpoornCompoundTag(stack);
+            CompoundTag compoundTag = getOrCreateSpoornCompoundTag(stack, true);
 
             // Crit chance
             if (!compoundTag.contains(CRIT_CHANCE)) {

@@ -47,7 +47,7 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
 
         // Add various attributes to tooltip
         if (stack.hasTag()) {
-            CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(stack, false);
+            CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(stack);
             if (compoundTag != null) {
                 // Lightning affinity tag on the tooltip
                 boolean hasLightningAffinity = compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)
@@ -78,7 +78,7 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (stack.getItem() instanceof BaseSpoornSwordItem) {
-            float lifesteal = getLifesteal(SpoornUtil.getOrCreateSpoornCompoundTag(stack, false)) / 100;
+            float lifesteal = getLifesteal(SpoornUtil.getButDontCreateSpoornCompoundTag(stack)) / 100;
             //log.info("Lifesteal: {}", lifesteal);
             try {
                 if (lifesteal > 0) {

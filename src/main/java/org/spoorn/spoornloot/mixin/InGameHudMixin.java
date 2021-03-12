@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spoorn.spoornloot.item.swords.BaseSpoornSwordItem;
 
 @Log4j2
-@Mixin(InGameHud.class)
+@Mixin(value = InGameHud.class, priority = 100)
 public class InGameHudMixin {
 
     @Shadow private ItemStack currentStack;

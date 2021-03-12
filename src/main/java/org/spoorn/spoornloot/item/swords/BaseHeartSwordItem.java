@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
@@ -28,7 +29,8 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
         if (!world.isClient() && stack.getItem() instanceof HeartPurpleSwordItem) {
-            if (stack.getCooldown() == 0) {
+            if (!user.getItemCooldownManager().isCoolingDown(stack.getItem())) {
+                user.getItemCooldownManager().set(stack.getItem(), 600);
                 world.playSound(
                         null,
                         user.getBlockPos(),
@@ -37,7 +39,6 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
                         0.6f,
                         1f
                 );
-                stack.setCooldown(600);
                 return TypedActionResult.success(stack);
             }
         }
@@ -49,7 +50,10 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
             ItemStack stack = player.getMainHandStack();
             boolean rightSituation = stack.getItem() instanceof BaseHeartSwordItem && entity.isLiving();
             if (rightSituation && !world.isClient() && stack.getItem() instanceof HeartPurpleSwordItem) {
-                if (stack.getCooldown() == 0) {
+                CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(stack);
+                long currTime = world.getTime();
+                if (!compoundTag.contains(SpoornUtil.LAST_SPOORN_SOUND)
+                    || compoundTag.getFloat(SpoornUtil.LAST_SPOORN_SOUND) + 80 < currTime) {
                     world.playSound(
                             null,
                             player.getBlockPos(),
@@ -58,7 +62,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
                             0.3f,
                             1f
                     );
-                    stack.setCooldown(80);
+                    compoundTag.putFloat(SpoornUtil.LAST_SPOORN_SOUND, currTime);
                 }
             } else if (rightSituation && world.isClient()) {
                 for (int i = 0; i < 2; ++i) {

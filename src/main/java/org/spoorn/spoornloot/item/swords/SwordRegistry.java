@@ -97,7 +97,7 @@ public class SwordRegistry {
             if (!world.isClient) {
                 Item item = player.getMainHandStack().getItem();
                 if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
-                    CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
+                    CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                     if (compoundTag != null) {
                         float damage = 0;
                         damage += getCritDamage(player, item, compoundTag);
@@ -173,7 +173,7 @@ public class SwordRegistry {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
             if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
-                CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
+                CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
                     log.error("Could not find LightningAffinity data on Spoorn Sword.");
                     return ActionResult.PASS;
@@ -196,7 +196,7 @@ public class SwordRegistry {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
             if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
-                CompoundTag compoundTag = SpoornUtil.getOrCreateSpoornCompoundTag(player.getMainHandStack(), false);
+                CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.EXPLOSIVE)) {
                     log.error("Could not find Explosive data on Spoorn Sword.");
                     return ActionResult.PASS;
