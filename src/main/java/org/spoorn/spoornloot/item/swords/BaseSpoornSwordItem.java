@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.spoorn.spoornloot.mixin.LivingEntityMixin;
 import org.spoorn.spoornloot.util.SpoornUtil;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
@@ -80,12 +81,14 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
             float lifesteal = getLifesteal(SpoornUtil.getOrCreateSpoornCompoundTag(stack, false)) / 100;
             //log.info("Lifesteal: {}", lifesteal);
             try {
-                float lastDamageTaken = target.getClass().getField(SpoornUtil.LAST_DAMAGE_TAKEN_FIELD).getFloat(target);
-                //log.info("Last damage taken: {}", lastDamageTaken);
-                //log.info("Heal amount: {}", lifesteal * lastDamageTaken);
-                attacker.heal(lifesteal * lastDamageTaken);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
+                if (lifesteal > 0) {
+                    float lastDamageTaken = ((LivingEntityMixin) target).getLastDamageTaken();
+                    //log.info("Last damage taken: {}", lastDamageTaken);
+                    //log.info("Heal amount: {}", lifesteal * lastDamageTaken);
+                    attacker.heal(lifesteal * lastDamageTaken);
+                }
+            } catch (Exception ex) {
+                log.error("Could not apply lifesteal", ex);
             }
         }
         return super.postHit(stack, target, attacker);
