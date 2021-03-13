@@ -48,7 +48,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
     private void registerHitMechanics() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack stack = player.getMainHandStack();
-            boolean rightSituation = SpoornUtil.isSpoornSwordItem(stack.getItem()) && entity.isLiving();
+            boolean rightSituation = stack.getItem() instanceof BaseHeartSwordItem && entity.isLiving();
             if (rightSituation && !world.isClient() && stack.getItem() instanceof HeartPurpleSwordItem) {
                 CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(stack);
                 long currTime = world.getTime();
