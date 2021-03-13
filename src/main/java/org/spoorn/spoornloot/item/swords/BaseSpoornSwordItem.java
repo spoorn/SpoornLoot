@@ -77,7 +77,7 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (stack.getItem() instanceof BaseSpoornSwordItem) {
+        if (SpoornUtil.isSpoornSwordItem(stack.getItem())) {
             float lifesteal = getLifesteal(SpoornUtil.getButDontCreateSpoornCompoundTag(stack)) / 100;
             //log.info("Lifesteal: {}", lifesteal);
             try {

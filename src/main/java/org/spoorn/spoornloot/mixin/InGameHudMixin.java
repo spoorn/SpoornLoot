@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spoorn.spoornloot.item.swords.BaseSpoornSwordItem;
+import org.spoorn.spoornloot.util.SpoornUtil;
 
 @Log4j2
 @Mixin(value = InGameHud.class, priority = 100)
@@ -23,7 +24,7 @@ public class InGameHudMixin {
     @ModifyVariable(method="renderHeldItemTooltip", at=@At(value="STORE", ordinal = 0))
     public MutableText renderHeldItemToolTipTextOverride(MutableText mutableText) {
         Item item = this.currentStack.getItem();
-        if (item instanceof BaseSpoornSwordItem) {
+        if (SpoornUtil.isSpoornSwordItem(item)) {
             BaseSpoornSwordItem baseSpoornSwordItem = (BaseSpoornSwordItem) item;
             Style newStyle = mutableText.getStyle().withColor(
                 TextColor.fromRgb(baseSpoornSwordItem.getSpoornRarity().getColorValue()));

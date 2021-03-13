@@ -109,11 +109,12 @@ public final class SpoornUtil {
         return nextGaussian;
     }
 
-    public static void addSwordAttributes(List<ItemStack> itemStacks) {
-        for (ItemStack stack : itemStacks) {
-            addSwordAttributes(stack);
-        }
+    public static boolean isSpoornSwordItem(Object object) {
+        return object instanceof BaseSpoornSwordItem;
     }
+
+
+    // Spoorn NBT helpers
 
     public static CompoundTag getButDontCreateSpoornCompoundTag(ItemStack stack) {
         return getOrCreateSpoornCompoundTag(stack, false);
@@ -142,8 +143,17 @@ public final class SpoornUtil {
         return compoundTag.getCompound(SPOORN_NBT_TAG_NAME);
     }
 
+
+    // Sword attributes
+
+    public static void addSwordAttributes(List<ItemStack> itemStacks) {
+        for (ItemStack stack : itemStacks) {
+            addSwordAttributes(stack);
+        }
+    }
+
     public static void addSwordAttributes(ItemStack stack) {
-        if (stack.getItem() instanceof BaseSpoornSwordItem) {
+        if (isSpoornSwordItem(stack.getItem())) {
             CompoundTag compoundTag = getOrCreateSpoornCompoundTag(stack, true);
 
             // Crit chance
@@ -214,6 +224,9 @@ public final class SpoornUtil {
             }
         }
     }
+
+
+    // private helper stuff
 
     private static EntityAttribute register(String id, EntityAttribute attribute) {
         return (EntityAttribute) Registry.register(Registry.ATTRIBUTE, id, attribute);

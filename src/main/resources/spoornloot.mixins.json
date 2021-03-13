@@ -11,7 +11,9 @@
     "LootTableMixin",
     "PlayerEntityMixin",
     "LivingEntityMixin",
-    "ExplosionMixin"
+    "ExplosionMixin",
+    "BipedEntityModelMixin",
+    "HeldItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

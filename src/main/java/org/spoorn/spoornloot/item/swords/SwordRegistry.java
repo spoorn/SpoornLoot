@@ -13,7 +13,6 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -99,7 +98,7 @@ public class SwordRegistry {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             if (!world.isClient) {
                 Item item = player.getMainHandStack().getItem();
-                if (item instanceof BaseSpoornSwordItem && entity instanceof LivingEntity) {
+                if (SpoornUtil.isSpoornSwordItem(item) && entity instanceof LivingEntity) {
                     CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                     if (compoundTag != null) {
                         float damage = 0;
@@ -191,7 +190,7 @@ public class SwordRegistry {
     private static void registerLightningCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
-            if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
+            if (SpoornUtil.isSpoornSwordItem(item) && entity.isLiving()) {
                 CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
                     log.error("Could not find LightningAffinity data on Spoorn Sword.");
@@ -214,7 +213,7 @@ public class SwordRegistry {
     private static void registerExplosiveCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
-            if (item instanceof BaseSpoornSwordItem && entity.isLiving()) {
+            if (SpoornUtil.isSpoornSwordItem(item) && entity.isLiving()) {
                 CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.EXPLOSIVE)) {
                     log.error("Could not find Explosive data on Spoorn Sword.");
