@@ -12,6 +12,9 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.loot.ConstantLootTableRange;
@@ -103,6 +106,7 @@ public class SwordRegistry {
                         damage += getCritDamage(player, item, compoundTag);
                         //log.info("Crit damage: {}", damage);
                         damage += getFireDamage(entity, compoundTag);
+                        damage += getColdDamage(entity, compoundTag);
                         if (damage > 0) {
                             //log.info("Bonus damage from spoorn loot: {}", damage);
                             damage += getBaseDamage(player, item);
@@ -166,6 +170,21 @@ public class SwordRegistry {
             entity.setOnFireFor(5);
         }
         return fireDamage;
+    }
+
+    // Get bonus damage from cold damage and slow target
+    private static float getColdDamage(Entity entity, CompoundTag compoundTag) {
+        if (compoundTag == null || !compoundTag.contains(SpoornUtil.COLD_DAMAGE)) {
+            log.error("Could not find ColdDamage data on Spoorn Sword.  This should not happen!");
+            return 0;
+        }
+
+        float coldDamage = compoundTag.getFloat(SpoornUtil.COLD_DAMAGE);
+        //log.info("Cold damage: {}", coldDamage);
+        if (coldDamage > 0 && entity.isLiving()) {
+            ((LivingEntity)entity).applyStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 2));
+        }
+        return coldDamage;
     }
 
     // Fetch lightning data from NBT and apply lightning

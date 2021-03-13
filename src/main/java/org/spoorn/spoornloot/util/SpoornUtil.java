@@ -40,6 +40,9 @@ public final class SpoornUtil {
     public static final String FIRE_DAMAGE = "fireDamage";
     public static final String FIRE_DAMAGE_ID = "spoornloot.fire_damage";
     public static final String FIRE_DAMAGE_WEAPON_MODIFIER = "Fire Damage";
+    public static final String COLD_DAMAGE = "coldDamage";
+    public static final String COLD_DAMAGE_ID = "spoornloot.cold_damage";
+    public static final String COLD_DAMAGE_WEAPON_MODIFIER = "Cold Damage";
     public static final String LIFESTEAL = "lifesteal";
     public static final String LIFESTEAL_ID = "spoornloot.lifesteal";
     public static final String LIFESTEAM_WEAPON_MODIFIER = "Lifesteal";
@@ -68,6 +71,12 @@ public final class SpoornUtil {
             ModConfig.get().serverConfig.maxSwordFireDamage).setTracked(true)
     );
 
+    public static final EntityAttribute COLD_DAMAGE_ENTITY_ATTRIBUTE = register(
+            COLD_DAMAGE_ID,
+            new ClampedEntityAttribute(SpoornUtil.COLD_DAMAGE_WEAPON_MODIFIER, 0.0f, 0.0f,
+                    ModConfig.get().serverConfig.maxSwordColdDamage).setTracked(true)
+    );
+
     public static final EntityAttribute LIFESTEAL_ENTITY_ATTRIBUTE = register(
             LIFESTEAL_ID,
             new ClampedEntityAttribute(SpoornUtil.LIFESTEAM_WEAPON_MODIFIER, 0.0f, 0.0f,
@@ -82,6 +91,8 @@ public final class SpoornUtil {
             new AttributeInfo(CRIT_WEAPON_MODIFIER, CRIT_CHANCE, (x) -> x * 100));
         localMap.put(FIRE_DAMAGE_ENTITY_ATTRIBUTE,
             new AttributeInfo(FIRE_DAMAGE_WEAPON_MODIFIER, FIRE_DAMAGE, Function.identity()));
+        localMap.put(COLD_DAMAGE_ENTITY_ATTRIBUTE,
+            new AttributeInfo(COLD_DAMAGE_WEAPON_MODIFIER, COLD_DAMAGE, Function.identity()));
         localMap.put(LIFESTEAL_ENTITY_ATTRIBUTE,
             new AttributeInfo(LIFESTEAM_WEAPON_MODIFIER, LIFESTEAL, Function.identity()));
         ENTITY_ATTRIBUTES = ImmutableMap.copyOf(localMap);
@@ -166,6 +177,19 @@ public final class SpoornUtil {
                     compoundTag.putFloat(FIRE_DAMAGE, fireDamage);
                 } else {
                     compoundTag.putFloat(FIRE_DAMAGE, 0);
+                }
+            }
+
+            // Fire damage
+            if (!compoundTag.contains(COLD_DAMAGE)) {
+                float coldChance = RANDOM.nextFloat();
+                if (coldChance < (1.0 / ModConfig.get().serverConfig.coldChance)) {
+                    // This mean and sd makes it so  there's a ~9% chance of getting above 5 fire damage
+                    float coldDamage = (float) getNextGaussian(1, 3, 1, ModConfig.get().serverConfig.maxSwordColdDamage);
+                    //log.info("Setting sword cold damage to {} for stack {}", coldDamage, stack);
+                    compoundTag.putFloat(COLD_DAMAGE, coldDamage);
+                } else {
+                    compoundTag.putFloat(COLD_DAMAGE, 0);
                 }
             }
 
