@@ -16,19 +16,19 @@ public class ServerConfig {
     @Comment("Chance for swords to have fire damage [1/value] [default = 80]")
     public int fireDamageChance = 80;
 
-    @Comment("Maximum fire damage for swords [1/value] [default = 30]")
+    @Comment("Maximum fire damage for swords [default = 30]")
     public int maxSwordFireDamage = 30;
 
     @Comment("Chance for sword to have cold damage [1/value] [default = 80]")
     public int coldChance = 80;
 
-    @Comment("Maximum cold damage for swords [1/value] [default = 30]")
+    @Comment("Maximum cold damage for swords [default = 30]")
     public int maxSwordColdDamage = 30;
 
     @Comment("Chance for swords to have lifesteal [1/value] [default = 50]")
     public int lifestealChance = 50;
 
-    @Comment("Maximum lifesteam for swords [1/value] [default = 30]")
+    @Comment("Maximum lifesteam for swords [default = 30]")
     public int maxLifesteal = 30;
 
     @Comment("Chance for sword to be Explosive [1/value] [default = 200]")
