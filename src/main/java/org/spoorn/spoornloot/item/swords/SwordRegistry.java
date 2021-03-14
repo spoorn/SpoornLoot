@@ -1,20 +1,12 @@
 package org.spoorn.spoornloot.item.swords;
 
-import com.google.common.collect.Multimap;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.item.Item;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
@@ -31,9 +23,7 @@ import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 import org.spoorn.spoornloot.util.SpoornUtil;
 
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Log4j2
 public class SwordRegistry {
@@ -63,7 +53,6 @@ public class SwordRegistry {
         spoornSwords = new HashSet<>();
         registerSwords();
         initSwordLootPools();
-        registerSpoornAttributesCallback();
         registerLightningCallback();
         registerExplosiveCallback();
         registerSoundEventsCallback();
@@ -91,99 +80,6 @@ public class SwordRegistry {
     private static void addSwordToRegistry(Identifier identifier, BaseSpoornSwordItem item) {
         Registry.register(Registry.ITEM, identifier, item);
         spoornSwords.add(item);
-    }
-
-    // Fetch data from NBT and apply damage modifiers
-    private static void registerSpoornAttributesCallback() {
-        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (!world.isClient) {
-                Item item = player.getMainHandStack().getItem();
-                if (SpoornUtil.isSpoornSwordItem(item) && entity instanceof LivingEntity) {
-                    CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
-                    if (compoundTag != null) {
-                        float damage = 0;
-                        damage += getCritDamage(player, item, compoundTag);
-                        //log.info("Crit damage: {}", damage);
-                        damage += getFireDamage(entity, compoundTag);
-                        damage += getColdDamage(entity, compoundTag);
-                        if (damage > 0) {
-                            //log.info("Bonus damage from spoorn loot: {}", damage);
-                            damage += getBaseDamage(player, item);
-                            //log.info("Final damage: {}", damage);
-                            entity.damage(DamageSource.player(player), damage);
-                        }
-                    } else {
-                        log.error("Got NULL compoundTag when trying to register Spoorn Attributes for item [{}]",
-                                player.getMainHandStack());
-                    }
-                }
-            }
-            return ActionResult.PASS;
-        });
-    }
-
-    // Gets base damage
-    private static float getBaseDamage(PlayerEntity player, Item item) {
-        AtomicReference<Float> damage = new AtomicReference<>(0.0f);
-        Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers =
-                item.getAttributeModifiers(EquipmentSlot.MAINHAND);
-        if (attributeModifiers.containsKey(EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
-            attributeModifiers.get(EntityAttributes.GENERIC_ATTACK_DAMAGE)
-                    .forEach((entityAttributeModifier -> {
-                        damage.updateAndGet(v -> new Float((float)(v + entityAttributeModifier.getValue())));
-                        //log.error("### updating with={}", entityAttributeModifier.getValue());
-                    }));
-        }
-        // Damage shown on tooltip is player + item + enchantments damage.  Got this from ItemStack.java
-        float playerDamage = (float)player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-        float enchantmentDamage = EnchantmentHelper.getAttackDamage(player.getMainHandStack(), EntityGroup.DEFAULT);
-        return damage.get() + playerDamage + enchantmentDamage;
-    }
-
-    // Get bonus damage that comes from crit
-    private static float getCritDamage(PlayerEntity player, Item item, CompoundTag compoundTag) {
-        if (compoundTag == null || !compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
-            log.error("Could not find CritChance data on Spoorn Sword.  This should not happen!");
-            return 0;
-        }
-        float critChance = compoundTag.getFloat(SpoornUtil.CRIT_CHANCE);
-        float randFloat = new Random().nextFloat();
-        //log.error("### critchance={}", critChance);
-        if (randFloat < critChance) {
-            return getBaseDamage(player, item) * 0.5f;
-        }
-
-        return 0;
-    }
-
-    // Get bonus damage from fire damage and set target on fire
-    private static float getFireDamage(Entity entity, CompoundTag compoundTag) {
-        if (compoundTag == null || !compoundTag.contains(SpoornUtil.FIRE_DAMAGE)) {
-            log.error("Could not find FireDamage data on Spoorn Sword.  This should not happen!");
-            return 0;
-        }
-
-        float fireDamage = compoundTag.getFloat(SpoornUtil.FIRE_DAMAGE);
-        //log.info("Fire damage: {}", fireDamage);
-        if (fireDamage > 0 && entity.isLiving()) {
-            entity.setOnFireFor(5);
-        }
-        return fireDamage;
-    }
-
-    // Get bonus damage from cold damage and slow target
-    private static float getColdDamage(Entity entity, CompoundTag compoundTag) {
-        if (compoundTag == null || !compoundTag.contains(SpoornUtil.COLD_DAMAGE)) {
-            log.error("Could not find ColdDamage data on Spoorn Sword.  This should not happen!");
-            return 0;
-        }
-
-        float coldDamage = compoundTag.getFloat(SpoornUtil.COLD_DAMAGE);
-        //log.info("Cold damage: {}", coldDamage);
-        if (coldDamage > 0 && entity.isLiving()) {
-            ((LivingEntity)entity).applyStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 2));
-        }
-        return coldDamage;
     }
 
     // Fetch lightning data from NBT and apply lightning
