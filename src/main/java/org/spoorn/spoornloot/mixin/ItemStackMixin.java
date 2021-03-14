@@ -1,11 +1,9 @@
 package org.spoorn.spoornloot.mixin;
 
-import static org.spoorn.spoornloot.util.SpoornUtil.AttributeInfo;
 import static org.spoorn.spoornloot.util.SpoornUtil.ENTITY_ATTRIBUTES;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import lombok.extern.log4j.Log4j2;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -20,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spoorn.spoornloot.util.SpoornUtil;
+import org.spoorn.spoornloot.util.SpoornUtil.AttributeInfo;
 
 import java.util.Map;
 import java.util.UUID;
