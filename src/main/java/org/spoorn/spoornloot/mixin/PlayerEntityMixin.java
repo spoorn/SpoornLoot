@@ -1,7 +1,14 @@
 package org.spoorn.spoornloot.mixin;
 
+import com.google.common.collect.Multimap;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityGroup;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -17,7 +24,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.util.SpoornUtil;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
@@ -40,23 +50,60 @@ public class PlayerEntityMixin {
         if (player instanceof ServerPlayerEntity) {
             World world = player.getEntityWorld();
             if (!world.isClient()) {
-                Item item = player.getMainHandStack().getItem();
-                if (SpoornUtil.isSpoornSwordItem(item) && target instanceof LivingEntity) {
-                    CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
-                    if (compoundTag != null) {
-                        //log.info("Crit damage: {}", damage);
-                        modifiedDamage += getFireDamage(target, compoundTag);
-                        modifiedDamage += getColdDamage(target, compoundTag);
-                        modifiedDamage += getCritDamage(modifiedDamage, player, item, compoundTag);
-                    } else {
-                        log.error("Got NULL compoundTag when trying to register Spoorn Attributes for item [{}]",
-                                player.getMainHandStack());
+                boolean isLivingTarget = target instanceof LivingEntity;
+                if (isLivingTarget) {
+                    Item item = player.getMainHandStack().getItem();
+                    // Main hand
+                    if (SpoornUtil.isSpoornSwordItem(item)) {
+                        CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
+                        if (compoundTag != null) {
+                            //log.info("Crit damage: {}", damage);
+                            modifiedDamage += getFireDamage(target, compoundTag);
+                            modifiedDamage += getColdDamage(target, compoundTag);
+                            modifiedDamage += getCritDamage(modifiedDamage, player, item, compoundTag);
+                        } else {
+                            log.error("Got NULL compoundTag when trying to register Spoorn Attributes for item [{}]",
+                                    player.getMainHandStack());
+                        }
+                    }
+
+                    Item offHandItem = player.getOffHandStack().getItem();
+                    if (SpoornUtil.isSpoornSwordItem(offHandItem)) {
+                        CompoundTag offHandTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getOffHandStack());
+                        float offHandDamage = getBaseDamage(player, offHandItem);
+                        if (offHandTag != null) {
+                            offHandDamage += getFireDamage(target, offHandTag);
+                            offHandDamage += getColdDamage(target, offHandTag);
+                            offHandDamage += getCritDamage(offHandDamage, player, offHandItem, offHandTag);
+                        } else {
+                            log.error("Got NULL offHandTag when trying to register Spoorn Attributes for item [{}]",
+                                player.getOffHandStack());
+                        }
+                        modifiedDamage += (offHandDamage * 1.0/ModConfig.get().serverConfig.dualWieldDamageScale);
                     }
                 }
             }
         }
         //log.info("final modified damage: " + modifiedDamage);
         return modifiedDamage;
+    }
+
+    // Gets base damage
+    private static float getBaseDamage(PlayerEntity player, Item item) {
+        AtomicReference<Float> damage = new AtomicReference<>(0.0f);
+        Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers =
+                        item.getAttributeModifiers(EquipmentSlot.MAINHAND);
+        if (attributeModifiers.containsKey(EntityAttributes.GENERIC_ATTACK_DAMAGE)) {
+                attributeModifiers.get(EntityAttributes.GENERIC_ATTACK_DAMAGE)
+                                .forEach((entityAttributeModifier -> {
+                                damage.updateAndGet(v -> new Float((float)(v + entityAttributeModifier.getValue())));
+                                //log.error("### updating with={}", entityAttributeModifier.getValue());
+                                    }));
+            }
+        // Damage shown on tooltip is player + item + enchantments damage.  Got this from ItemStack.java
+        float playerDamage = (float)player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        float enchantmentDamage = EnchantmentHelper.getAttackDamage(player.getMainHandStack(), EntityGroup.DEFAULT);
+        return damage.get() + playerDamage + enchantmentDamage;
     }
 
     // Get bonus damage that comes from crit

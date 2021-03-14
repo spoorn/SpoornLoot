@@ -33,4 +33,7 @@ public class ServerConfig {
 
     @Comment("Chance for sword to be Explosive [1/value] [default = 200]")
     public int explosiveChance = 200;
+
+    @Comment("This is how much we scale the damage of the offhand weapon when dual wielding [1/value] [default = 2 (50%)]")
+    public int dualWieldDamageScale = 2;
 }
