@@ -1,25 +1,67 @@
 package org.spoorn.spoornloot.mixin;
 
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.Arm;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spoorn.spoornloot.util.SpoornUtil;
 
 @Mixin(BipedEntityModel.class)
-public class BipedEntityModelMixin {
+public abstract class BipedEntityModelMixin<T extends LivingEntity> {
 
-    @Shadow public float leaningPitch;
+    private int counter = 0;
+    private boolean firstInvocation = true;
 
-    /*@ModifyVariable(method = "setAngles", name = "n", at = @At(value = "STORE"))
-    public float replaceArm(float n) {
-        return this.leaningPitch;
-    }*/
+    @Shadow protected abstract void method_29353(T livingEntity, float f);
 
-    // This is for Third Person model
-    /*@ModifyVariable(method = "method_29353", at = @At(value = "STORE"))
-    public Arm replaceArm(Arm arm) {
-        return Arm.LEFT;
-    }*/
+    @Shadow protected abstract Arm getPreferredArm(T entity);
+
+    /**
+     * Hijack this method_29353() that renders the arm swings in Third person.  Render both arm swings if the player is
+     * wielding two Spoorn weapons.
+     */
+    @Inject(method = "method_29353", at = @At(value = "HEAD"), cancellable = true)
+    public void renderThirdPersonModelForBothArms(T livingEntity, float f, CallbackInfo ci) {
+        if (firstInvocation && shouldRenderBothArmSwing(livingEntity)) {
+            firstInvocation = false;
+            method_29353(livingEntity, f);
+            method_29353(livingEntity, f);
+            firstInvocation = true;
+            ci.cancel();
+        }
+    }
+
+    @Redirect(method = "method_29353", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/model/" +
+        "BipedEntityModel;getPreferredArm(Lnet/minecraft/entity/LivingEntity;)Lnet/minecraft/util/Arm;"))
+    public Arm overrideArm(BipedEntityModel bipedEntityModel, T entity) {
+        if (shouldRenderBothArmSwing(entity)) {
+            if (this.counter == 0) {
+                this.counter++;
+                return Arm.LEFT;
+            } else {
+                this.counter = 0;
+                return Arm.RIGHT;
+            }
+        } else {
+            return this.getPreferredArm(entity);
+        }
+    }
+
+    // Only render both arms swings if this is for a player and we're swinging
+    private boolean shouldRenderBothArmSwing(T entity) {
+        if (entity instanceof PlayerEntity && !(((BipedEntityModel)(Object)this).handSwingProgress <= 0.0F)) {
+            Item mainItem = entity.getMainHandStack().getItem();
+            Item offHandItem = entity.getOffHandStack().getItem();
+            return SpoornUtil.isSpoornSwordItem(offHandItem) && SpoornUtil.isSpoornSwordItem(mainItem);
+        }
+
+        return false;
+    }
 }
