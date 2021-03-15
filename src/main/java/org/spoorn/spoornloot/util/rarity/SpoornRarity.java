@@ -7,12 +7,12 @@ import lombok.Getter;
  * limited and not extensible.
  */
 public class SpoornRarity {
-    public static final SpoornRarity COMMON = new SpoornRarity(13401901, 20, 300);
-    public static final SpoornRarity UNCOMMON = new SpoornRarity(5950509, 10, 450);
-    public static final SpoornRarity RARE = new SpoornRarity(2977228, 8, 600);
-    public static final SpoornRarity EPIC = new SpoornRarity(12278256, 5, 999);
-    public static final SpoornRarity PINK = new SpoornRarity(16761035, 2, 1300);
-    public static final SpoornRarity LEGENDARY = new SpoornRarity(3197337, 1, 1300);
+    public static final SpoornRarity COMMON = new SpoornRarity(13401901, 30, 300);
+    public static final SpoornRarity UNCOMMON = new SpoornRarity(5950509, 20, 450);
+    public static final SpoornRarity RARE = new SpoornRarity(2977228, 12, 600);
+    public static final SpoornRarity EPIC = new SpoornRarity(12278256, 8, 999);
+    public static final SpoornRarity PINK = new SpoornRarity(16761035, 3, 1300);
+    public static final SpoornRarity LEGENDARY = new SpoornRarity(3197337, 2, 1300);
     public static final SpoornRarity DOOM = new SpoornRarity(13899581, 1, 1600);
 
     @Getter

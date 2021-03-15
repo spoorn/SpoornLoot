@@ -19,6 +19,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.explosion.Explosion;
 import org.spoorn.spoornloot.config.ModConfig;
+import org.spoorn.spoornloot.item.daggers.*;
 import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 import org.spoorn.spoornloot.util.SpoornUtil;
 
@@ -28,58 +29,52 @@ import java.util.Set;
 @Log4j2
 public class SwordRegistry {
 
-    public static final BaseSpoornSwordItem DEFAULT_SPOORN_SWORD = new SpoornSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_KIKO_SWORD = new KikoSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_PINK_SWORD = new PinkSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_CYAN_SWORD = new CyanSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_DAISY_SWORD = new DaisySwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_EAGLE_SWORD = new EagleSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_GREEN_SWORD = new GreenSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_HEART_SWORD = new HeartSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_LANNISTER_SWORD = new LannisterSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_GREEN_SWORD2 = new GreenSword2Item();
-    private static final BaseSpoornSwordItem DEFAULT_HEART_PURPLE_SWORD = new HeartPurpleSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_POCKY_MATCHA_SWORD = new PockyMatchaSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_POCKY_STRAWBERRY_SWORD = new PockyStrawberrySwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_POCKY_SWORD = new PockySwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_RED_SWORD = new RedSwordItem();
-    private static final BaseSpoornSwordItem DEFAULT_SWAMP_SWORD = new SwampSwordItem();
+    // All swords in this Set will be added to the Spoorn Loot Pool
+    private static Set<BaseSpoornSwordItem> spoornSwords = new HashSet<>();
+
+    // All swords
+    public static final BaseSpoornSwordItem DEFAULT_SPOORN_SWORD = registerSword(SpoornSwordItem.IDENTIFIER, new SpoornSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_KIKO_SWORD = registerSword(KikoSwordItem.IDENTIFIER, new KikoSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_PINK_SWORD = registerSword(PinkSwordItem.IDENTIFIER, new PinkSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_CYAN_SWORD = registerSword(CyanSwordItem.IDENTIFIER, new CyanSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_DAISY_SWORD = registerSword(DaisySwordItem.IDENTIFIER, new DaisySwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_EAGLE_SWORD = registerSword(EagleSwordItem.IDENTIFIER, new EagleSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_GREEN_SWORD = registerSword(GreenSwordItem.IDENTIFIER, new GreenSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_HEART_SWORD = registerSword(HeartSwordItem.IDENTIFIER, new HeartSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_LANNISTER_SWORD = registerSword(LannisterSwordItem.IDENTIFIER, new LannisterSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_GREEN_SWORD2 = registerSword(GreenSword2Item.IDENTIFIER, new GreenSword2Item());
+    private static final BaseSpoornSwordItem DEFAULT_HEART_PURPLE_SWORD = registerSword(HeartPurpleSwordItem.IDENTIFIER, new HeartPurpleSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_MATCHA_SWORD = registerSword(PockyMatchaSwordItem.IDENTIFIER, new PockyMatchaSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_STRAWBERRY_SWORD = registerSword(PockyStrawberrySwordItem.IDENTIFIER, new PockyStrawberrySwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_SWORD = registerSword(PockySwordItem.IDENTIFIER, new PockySwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_RED_SWORD = registerSword(RedSwordItem.IDENTIFIER, new RedSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_SWAMP_SWORD = registerSword(SwampSwordItem.IDENTIFIER, new SwampSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_EAGLE2 = registerSword(EagleSword2Item.IDENTIFIER, new EagleSword2Item());
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_CARAMEL = registerSword(PockyCaramelSwordItem.IDENTIFIER, new PockyCaramelSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_POCKY_CHERRY = registerSword(PockyCherrySwordItem.IDENTIFIER, new PockyCherrySwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_GREENTEA = registerSword(PockyGreenTeaSwordItem.IDENTIFIER, new PockyGreenTeaSwordItem());
+    private static final BaseDagger DEFAULT_CYAN_DAGGER = registerSword(CyanDagger.IDENTIFIER, new CyanDagger());
+    private static final BaseDagger DEFAULT_DAISY_DAGGER = registerSword(DaisyDagger.IDENTIFIER, new DaisyDagger());
+    private static final BaseDagger DEFAULT_GREEN_DAGGER = registerSword(GreenDagger.IDENTIFIER, new GreenDagger());
+    private static final BaseDagger DEFAULT_GREEN_DAGGER_2 = registerSword(GreenDagger2.IDENTIFIER, new GreenDagger2());
+    private static final BaseDagger DEFAULT_KIKO_DAGGER = registerSword(KikoDagger.IDENTIFIER, new KikoDagger());
+    private static final BaseDagger DEFAULT_RED_DAGGER = registerSword(RedDagger.IDENTIFIER, new RedDagger());
+    private static final BaseDagger DEFAULT_SPOORN_DAGGER = registerSword(SpoornDagger.IDENTIFIER, new SpoornDagger());
+    private static final BaseDagger DEFAULT_SPOORN_DAGGER_2 = registerSword(SpoornDagger2.IDENTIFIER, new SpoornDagger2());
 
     private static final Identifier LOOT_CHEST_ID = new Identifier("minecraft", "chests");
 
-    private static Set<BaseSpoornSwordItem> spoornSwords;
-
     public static void init() {
-        spoornSwords = new HashSet<>();
-        registerSwords();
         initSwordLootPools();
         registerLightningCallback();
         registerExplosiveCallback();
         registerSoundEventsCallback();
     }
 
-    private static void registerSwords() {
-        addSwordToRegistry(SpoornSwordItem.IDENTIFIER, DEFAULT_SPOORN_SWORD);
-        addSwordToRegistry(KikoSwordItem.IDENTIFIER, DEFAULT_KIKO_SWORD);
-        addSwordToRegistry(PinkSwordItem.IDENTIFIER, DEFAULT_PINK_SWORD);
-        addSwordToRegistry(CyanSwordItem.IDENTIFIER, DEFAULT_CYAN_SWORD);
-        addSwordToRegistry(DaisySwordItem.IDENTIFIER, DEFAULT_DAISY_SWORD);
-        addSwordToRegistry(EagleSwordItem.IDENTIFIER, DEFAULT_EAGLE_SWORD);
-        addSwordToRegistry(GreenSwordItem.IDENTIFIER, DEFAULT_GREEN_SWORD);
-        addSwordToRegistry(HeartSwordItem.IDENTIFIER, DEFAULT_HEART_SWORD);
-        addSwordToRegistry(LannisterSwordItem.IDENTIFIER, DEFAULT_LANNISTER_SWORD);
-        addSwordToRegistry(GreenSword2Item.IDENTIFIER, DEFAULT_GREEN_SWORD2);
-        addSwordToRegistry(HeartPurpleSwordItem.IDENTIFIER, DEFAULT_HEART_PURPLE_SWORD);
-        addSwordToRegistry(PockyMatchaSwordItem.IDENTIFIER, DEFAULT_POCKY_MATCHA_SWORD);
-        addSwordToRegistry(PockyStrawberrySwordItem.IDENTIFIER, DEFAULT_POCKY_STRAWBERRY_SWORD);
-        addSwordToRegistry(PockySwordItem.IDENTIFIER, DEFAULT_POCKY_SWORD);
-        addSwordToRegistry(RedSwordItem.IDENTIFIER, DEFAULT_RED_SWORD);
-        addSwordToRegistry(SwampSwordItem.IDENTIFIER, DEFAULT_SWAMP_SWORD);
-    }
-
-    private static void addSwordToRegistry(Identifier identifier, BaseSpoornSwordItem item) {
+    private static <T extends BaseSpoornSwordItem> T registerSword(Identifier identifier, T item) {
         Registry.register(Registry.ITEM, identifier, item);
         spoornSwords.add(item);
+        return item;
     }
 
     // Fetch lightning data from NBT and apply lightning
@@ -129,7 +124,7 @@ public class SwordRegistry {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             if (!world.isClient()) {
                 Item item = player.getMainHandStack().getItem();
-                if (item instanceof SpoornSwordItem && entity.isLiving()) {
+                if (SpoornUtil.isEnergySword(item) && entity.isLiving()) {
                     world.playSound(
                         null,
                         player.getBlockPos(),
@@ -146,7 +141,7 @@ public class SwordRegistry {
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
             if (!world.isClient()) {
                 Item item = player.getMainHandStack().getItem();
-                if (item instanceof SpoornSwordItem) {
+                if (SpoornUtil.isEnergySword(item)) {
                     world.playSound(
                             null,
                             player.getBlockPos(),

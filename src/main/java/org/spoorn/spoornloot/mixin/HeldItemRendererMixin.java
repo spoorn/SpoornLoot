@@ -41,7 +41,7 @@ public abstract class HeldItemRendererMixin {
             equipProgress = 1.0F - MathHelper.lerp(tickDelta, this.prevEquipProgressMainHand, this.equipProgressMainHand);
         }
         if ((swingProgress > 0 || equipProgress > 0) && hand == Hand.OFF_HAND
-            && SpoornUtil.isSpoornSwordItem(item.getItem()) && SpoornUtil.isSpoornSwordItem(mainHandItem)) {
+            && SpoornUtil.isDualWieldableCombo(mainHandItem, item.getItem())) {
 
             // counter is to prevent infinite recursion
             if (this.counter == 0) {

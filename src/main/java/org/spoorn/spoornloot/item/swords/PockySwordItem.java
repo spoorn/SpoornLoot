@@ -6,11 +6,12 @@ import lombok.extern.log4j.Log4j2;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
+import org.spoorn.spoornloot.item.common.DualWieldable;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
 @Log4j2
-public class PockySwordItem extends BaseLongSwordItem {
+public class PockySwordItem extends BaseLongSwordItem implements DualWieldable {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "pocky_sword");
 

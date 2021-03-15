@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "spoornloot:item/pocky_sword"
+    "layer0": "spoornloot:item/pocky_caramel_sword"
   },
   "display": {
     "thirdperson_righthand": {

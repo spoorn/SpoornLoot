@@ -1,28 +1,28 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "spoornloot:item/pocky_sword"
+    "layer0": "spoornloot:item/green_dagger_2"
   },
   "display": {
     "thirdperson_righthand": {
       "rotation": [0, -90, 55],
-      "translation": [0, 6, 0],
-      "scale": [1.2, 1.2, 1.2]
+      "translation": [0, 3, 0],
+      "scale": [0.6, 0.6, 0.6]
     },
     "thirdperson_lefthand": {
       "rotation": [0, 90, -55],
-      "translation": [0, 6, 0],
-      "scale": [1.2, 1.2, 1.2]
+      "translation": [0, 3, 0],
+      "scale": [0.6, 0.6, 0.6]
     },
     "firstperson_righthand": {
       "rotation": [0, -90, 25],
-      "translation": [1.5, 5, 0],
-      "scale": [1.1, 1.1, 1.1]
+      "translation": [1, 1, 0],
+      "scale": [0.6, 0.6, 0.6]
     },
     "firstperson_lefthand": {
       "rotation": [0, 90, -25],
-      "translation": [1.5, 5, 0],
-      "scale": [1.1, 1.1, 1.1]
+      "translation": [1, 1, 0],
+      "scale": [0.6, 0.6, 0.6]
     }
   }
 }

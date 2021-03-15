@@ -59,7 +59,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
         if (entity instanceof PlayerEntity && !(((BipedEntityModel)(Object)this).handSwingProgress <= 0.0F)) {
             Item mainItem = entity.getMainHandStack().getItem();
             Item offHandItem = entity.getOffHandStack().getItem();
-            return SpoornUtil.isSpoornSwordItem(offHandItem) && SpoornUtil.isSpoornSwordItem(mainItem);
+            return SpoornUtil.isDualWieldableCombo(mainItem, offHandItem);
         }
 
         return false;

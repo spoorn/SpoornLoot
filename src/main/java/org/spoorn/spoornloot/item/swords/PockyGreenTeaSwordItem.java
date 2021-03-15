@@ -11,9 +11,9 @@ import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
 @Log4j2
-public class PockyMatchaSwordItem extends BaseLongSwordItem implements DualWieldable {
+public class PockyGreenTeaSwordItem extends BaseLongSwordItem implements DualWieldable {
 
-    public static final Identifier IDENTIFIER = new Identifier(MODID, "pocky_matcha_sword");
+    public static final Identifier IDENTIFIER = new Identifier(MODID, "pocky_greentea_sword");
 
     private static final SpoornRarity DEFAULT_SPOORN_RARITY = SpoornRarity.LEGENDARY;
     private static final ToolMaterial DEFAULT_TOOL_MATERIAL = new SpoornToolMaterial(DEFAULT_SPOORN_RARITY);
@@ -24,11 +24,11 @@ public class PockyMatchaSwordItem extends BaseLongSwordItem implements DualWield
             .group(SPOORN_ITEM_GROUP)
             .rarity(Rarity.EPIC);
 
-    public PockyMatchaSwordItem() {
+    public PockyGreenTeaSwordItem() {
         this(DEFAULT_TOOL_MATERIAL, DEFAULT_ATK_DMG, DEFAULT_ATK_SPD, DEFAULT_SETTINGS);
     }
 
-    public PockyMatchaSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
+    public PockyGreenTeaSwordItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, DEFAULT_SPOORN_RARITY, settings);
     }
 }

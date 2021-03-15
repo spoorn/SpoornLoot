@@ -68,7 +68,7 @@ public class PlayerEntityMixin {
                     }
 
                     Item offHandItem = player.getOffHandStack().getItem();
-                    if (SpoornUtil.isSpoornSwordItem(offHandItem)) {
+                    if (SpoornUtil.isDualWieldableCombo(item, offHandItem)) {
                         CompoundTag offHandTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getOffHandStack());
                         float offHandDamage = getBaseDamage(player, offHandItem);
                         if (offHandTag != null) {
