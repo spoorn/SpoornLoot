@@ -128,12 +128,14 @@ public final class SpoornUtil {
      * Returns true if mainHand and offHand are both dual wieldable, and both the same type of weapon. Else false.
      */
     public static boolean isDualWieldableCombo(Item mainHandItem, Item offHandItem) {
-        boolean dualWieldable = isDualWieldable(mainHandItem) && isDualWieldable(offHandItem);
+        // Allow dual wielding if both weapons are Spoorn weapons for now.
+        return isSpoornSwordItem(mainHandItem) && isSpoornSwordItem(offHandItem);
+        /*boolean dualWieldable = isDualWieldable(mainHandItem) && isDualWieldable(offHandItem);
         if (!dualWieldable) {
             return false;
         } else {
             return isBothDagger(mainHandItem, offHandItem) || isBothLongSwordItem(mainHandItem, offHandItem);
-        }
+        }*/
     }
 
     private static boolean isDualWieldable(Object object) { return object instanceof DualWieldable; }
