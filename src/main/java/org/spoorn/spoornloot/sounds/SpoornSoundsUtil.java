@@ -15,12 +15,12 @@ public class SpoornSoundsUtil {
     public static final Identifier SM_WAND_ID = new Identifier(SpoornUtil.MODID, "sm_wand");
     public static final Identifier SM_THEME_ID = new Identifier(SpoornUtil.MODID, "sm_theme");
 
-    public static final SoundEvent SPOORN_SWORD_HIT_CHAR_SOUND = registerSoundEvent(new SoundEvent(SPOORN_SWORD_HIT_CHAR_ID));
-    public static final SoundEvent SPOORN_SWORD_HIT_ENV_SOUND = registerSoundEvent(new SoundEvent(SPOORN_SWORD_HIT_ENV_ID));
-    public static final SoundEvent SM_WAND_SOUND = registerSoundEvent(new SoundEvent(SM_WAND_ID));
-    public static final SoundEvent SM_THEME_SOUND = registerSoundEvent(new SoundEvent(SM_THEME_ID));
+    public static final SoundEvent SPOORN_SWORD_HIT_CHAR_SOUND = registerSoundEvent(SPOORN_SWORD_HIT_CHAR_ID, new SoundEvent(SPOORN_SWORD_HIT_CHAR_ID));
+    public static final SoundEvent SPOORN_SWORD_HIT_ENV_SOUND = registerSoundEvent(SPOORN_SWORD_HIT_ENV_ID, new SoundEvent(SPOORN_SWORD_HIT_ENV_ID));
+    public static final SoundEvent SM_WAND_SOUND = registerSoundEvent(SM_WAND_ID, new SoundEvent(SM_WAND_ID));
+    public static final SoundEvent SM_THEME_SOUND = registerSoundEvent(SM_THEME_ID, new SoundEvent(SM_THEME_ID));
 
-    private static SoundEvent registerSoundEvent(SoundEvent soundEvent) {
-        return Registry.register(Registry.SOUND_EVENT, soundEvent.getId(), soundEvent);
+    private static SoundEvent registerSoundEvent(Identifier identifier, SoundEvent soundEvent) {
+        return Registry.register(Registry.SOUND_EVENT, identifier, soundEvent);
     }
 }
