@@ -19,6 +19,9 @@
     ],
     "main": [
       "org.spoorn.spoornloot.SpoornLoot"
+    ],
+    "modmenu": [
+      "org.spoorn.spoornloot.config.SpoornModMenuApiImpl"
     ]
   },
   "mixins": [
