@@ -57,5 +57,6 @@
   "item.spoornloot.swamp_sword.tooltip" : "§o:flushed:",
   "item.spoornloot.lightning_affinity" : "Power of Thor",
   "item.spoornloot.explosive" : "Explosive",
+  "item.spoornloot.dualwieldable" : "Dual Wieldable",
   "itemGroup.spoornloot.general" : "Spoorn Loot"
 }

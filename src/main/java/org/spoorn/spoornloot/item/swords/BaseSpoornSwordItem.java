@@ -62,6 +62,11 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
                 if (isExplosive) {
                     tooltip.add(new TranslatableText(SpoornUtil.EXPLOSIVE_ID).setStyle(SpoornUtil.EXPLOSIVE_STYLE));
                 }
+
+                // Dual Wieldable tag
+                if (SpoornUtil.isSpoornSwordItem(stack.getItem())) {
+                    tooltip.add(new TranslatableText(SpoornUtil.DUAL_WIELDABLE_ID).setStyle(SpoornUtil.DUAL_WIELDABLE_STYLE));
+                }
             }
         }
         super.appendTooltip(stack, world, tooltip, context);

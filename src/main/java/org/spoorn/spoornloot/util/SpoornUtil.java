@@ -55,6 +55,7 @@ public final class SpoornUtil {
     public static final String LIFESTEAM_WEAPON_MODIFIER = "Lifesteal";
     public static final String EXPLOSIVE = "explosive";
     public static final String EXPLOSIVE_ID = "item.spoornloot.explosive";
+    public static final String DUAL_WIELDABLE_ID = "item.spoornloot.dualwieldable";
     public static final DamageSource SPOORN_DMG_SRC = new SpoornDamageSource(EXPLOSIVE_ID);
     public static final String SPOORN_NBT_TAG_NAME = "spoornConfig";
     public static final String LAST_SPOORN_SOUND = "lastSpoornSound";
@@ -64,6 +65,7 @@ public final class SpoornUtil {
         .build();
     public static final Style LIGHTNING_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(15990666));
     public static final Style EXPLOSIVE_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(11337728));
+    public static final Style DUAL_WIELDABLE_STYLE = Style.EMPTY.withColor(TextColor.fromRgb(16744496));
 
     public static final Random RANDOM = new Random();
 
