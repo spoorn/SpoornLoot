@@ -4,15 +4,15 @@
   "package": "org.spoorn.spoornloot.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  ],
-  "client": [
-    "InGameHudMixin",
-    "ItemStackMixin",
     "LootTableMixin",
     "PlayerEntityMixin",
     "LivingEntityMixin",
     "ExplosionMixin",
-    "BipedEntityModelMixin",
+    "BipedEntityModelMixin"
+  ],
+  "client": [
+    "InGameHudMixin",
+    "ItemStackMixin",
     "HeldItemRendererMixin"
   ],
   "injectors": {
