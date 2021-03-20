@@ -4,7 +4,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
@@ -36,12 +35,11 @@ public abstract class HeldItemRendererMixin {
         Hand hand, float swingProgress, ItemStack item, float equipProgress, MatrixStack matrices,
         VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
         swingProgress = player.getHandSwingProgress(tickDelta);
-        Item mainHandItem = player.getMainHandStack().getItem();
         if (hand == Hand.OFF_HAND) {
             equipProgress = 1.0F - MathHelper.lerp(tickDelta, this.prevEquipProgressMainHand, this.equipProgressMainHand);
         }
         if ((swingProgress > 0 || equipProgress > 0) && hand == Hand.OFF_HAND
-            && SpoornUtil.isDualWieldableCombo(mainHandItem, item.getItem())) {
+            && SpoornUtil.isDualWieldableCombo(player.getMainHandStack(), item)) {
 
             // counter is to prevent infinite recursion
             if (this.counter == 0) {

@@ -60,24 +60,30 @@ public class PlayerEntityMixin {
                             //log.info("Crit damage: {}", damage);
                             modifiedDamage += getFireDamage(target, compoundTag);
                             modifiedDamage += getColdDamage(target, compoundTag);
-                            modifiedDamage += getCritDamage(modifiedDamage, player, item, compoundTag);
+                            modifiedDamage += getCritDamage(modifiedDamage, compoundTag);
                         } else {
                             log.error("Got NULL compoundTag when trying to register Spoorn Attributes for item [{}]",
                                     player.getMainHandStack());
                         }
                     }
 
+                    // Dual Wield damage
                     Item offHandItem = player.getOffHandStack().getItem();
-                    if (SpoornUtil.isDualWieldableCombo(item, offHandItem)) {
-                        CompoundTag offHandTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getOffHandStack());
+                    if (SpoornUtil.isDualWieldableCombo(player.getMainHandStack(), player.getOffHandStack())) {
+                        // At minimum, add base damage of offhand weapon
                         float offHandDamage = getBaseDamage(player, offHandItem);
-                        if (offHandTag != null) {
-                            offHandDamage += getFireDamage(target, offHandTag);
-                            offHandDamage += getColdDamage(target, offHandTag);
-                            offHandDamage += getCritDamage(offHandDamage, player, offHandItem, offHandTag);
-                        } else {
-                            log.error("Got NULL offHandTag when trying to register Spoorn Attributes for item [{}]",
-                                player.getOffHandStack());
+
+                        // Additionally calculate Spoorn attributes for Spoorn items
+                        if (SpoornUtil.isSpoornSwordItem(offHandItem)) {
+                            CompoundTag offHandTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getOffHandStack());
+                            if (offHandTag != null) {
+                                offHandDamage += getFireDamage(target, offHandTag);
+                                offHandDamage += getColdDamage(target, offHandTag);
+                                offHandDamage += getCritDamage(offHandDamage, offHandTag);
+                            } else {
+                                log.error("Got NULL offHandTag when trying to register Spoorn Attributes for item [{}]",
+                                        player.getOffHandStack());
+                            }
                         }
                         modifiedDamage += (offHandDamage * 1.0/ModConfig.get().serverConfig.dualWieldDamageScale);
                     }
@@ -107,7 +113,7 @@ public class PlayerEntityMixin {
     }
 
     // Get bonus damage that comes from crit
-    private static float getCritDamage(float baseDamage, PlayerEntity player, Item item, CompoundTag compoundTag) {
+    private static float getCritDamage(float baseDamage, CompoundTag compoundTag) {
         if (compoundTag == null || !compoundTag.contains(SpoornUtil.CRIT_CHANCE)) {
             log.error("Could not find CritChance data on Spoorn Sword.  This should not happen!");
             return 0;

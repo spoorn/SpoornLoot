@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
@@ -16,6 +17,7 @@ import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spoorn.spoornloot.config.ModConfig;
+import org.spoorn.spoornloot.enchantment.EnchantmentRegistry;
 import org.spoorn.spoornloot.item.common.DualWieldable;
 import org.spoorn.spoornloot.item.daggers.BaseDagger;
 import org.spoorn.spoornloot.item.daggers.SpoornDagger;
@@ -122,32 +124,24 @@ public final class SpoornUtil {
         return object instanceof BaseSpoornSwordItem;
     }
 
+    public static boolean hasDualWieldEnchantment(ItemStack stack) {
+        return EnchantmentHelper.get(stack).containsKey(EnchantmentRegistry.DUAL_WIELD_ENCHANT);
+    }
+
+    public static boolean isDualWieldable(ItemStack stack) {
+        return stack.getItem() instanceof DualWieldable || hasDualWieldEnchantment(stack);
+    }
+
     public static boolean isEnergySword(Object object) {
         return object instanceof SpoornSwordItem || object instanceof SpoornDagger || object instanceof SpoornDagger2;
     }
 
     /**
-     * Returns true if mainHand and offHand are both dual wieldable, and both the same type of weapon. Else false.
+     * Returns true if mainHand and offHand are both dual wieldable, or both the type of weapon that are
+     * Dual Wieldable. Else false.
      */
-    public static boolean isDualWieldableCombo(Item mainHandItem, Item offHandItem) {
-        // Allow dual wielding if both weapons are Spoorn weapons for now.
-        return isSpoornSwordItem(mainHandItem) && isSpoornSwordItem(offHandItem);
-        /*boolean dualWieldable = isDualWieldable(mainHandItem) && isDualWieldable(offHandItem);
-        if (!dualWieldable) {
-            return false;
-        } else {
-            return isBothDagger(mainHandItem, offHandItem) || isBothLongSwordItem(mainHandItem, offHandItem);
-        }*/
-    }
-
-    private static boolean isDualWieldable(Object object) { return object instanceof DualWieldable; }
-
-    private static boolean isBothLongSwordItem(Item mainHandItem, Item offHandItem) {
-        return mainHandItem instanceof BaseLongSwordItem && offHandItem instanceof BaseLongSwordItem;
-    }
-
-    private static boolean isBothDagger(Item mainHandItem, Item offHandItem) {
-        return mainHandItem instanceof BaseDagger && offHandItem instanceof BaseDagger;
+    public static boolean isDualWieldableCombo(ItemStack mainStack, ItemStack offStack) {
+        return isDualWieldable(mainStack) && isDualWieldable(offStack);
     }
 
 

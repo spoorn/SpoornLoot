@@ -3,7 +3,7 @@ package org.spoorn.spoornloot.mixin;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,9 +57,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
     // Only render both arms swings if this is for a player and we're swinging
     private boolean shouldRenderBothArmSwing(T entity) {
         if (entity instanceof PlayerEntity && !(((BipedEntityModel)(Object)this).handSwingProgress <= 0.0F)) {
-            Item mainItem = entity.getMainHandStack().getItem();
-            Item offHandItem = entity.getOffHandStack().getItem();
-            return SpoornUtil.isDualWieldableCombo(mainItem, offHandItem);
+            ItemStack mainStack = entity.getMainHandStack();
+            ItemStack offStack = entity.getOffHandStack();
+            return SpoornUtil.isDualWieldableCombo(mainStack, offStack);
         }
 
         return false;

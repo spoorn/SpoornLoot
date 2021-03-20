@@ -58,5 +58,7 @@
   "item.spoornloot.lightning_affinity" : "Power of Thor",
   "item.spoornloot.explosive" : "Explosive",
   "item.spoornloot.dualwieldable" : "Dual Wieldable",
+  "enchantment.spoornloot.dualwield" : "Dual Wield",
+  "enchantment.spoornloot.dualwield.desc" : "Dual wield if weapons in both hands have this enchantment or property",
   "itemGroup.spoornloot.general" : "Spoorn Loot"
 }

@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
@@ -64,7 +65,7 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
                 }
 
                 // Dual Wieldable tag
-                if (SpoornUtil.isSpoornSwordItem(stack.getItem())) {
+                if (SpoornUtil.isDualWieldable(stack)) {
                     tooltip.add(new TranslatableText(SpoornUtil.DUAL_WIELDABLE_ID).setStyle(SpoornUtil.DUAL_WIELDABLE_STYLE));
                 }
             }
