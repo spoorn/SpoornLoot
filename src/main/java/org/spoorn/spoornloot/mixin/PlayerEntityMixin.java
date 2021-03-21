@@ -50,7 +50,7 @@ public class PlayerEntityMixin {
         if (player instanceof ServerPlayerEntity) {
             World world = player.getEntityWorld();
             if (!world.isClient()) {
-                boolean isLivingTarget = target instanceof LivingEntity;
+                boolean isLivingTarget = SpoornUtil.isLivingEntity(target);
                 if (isLivingTarget) {
                     Item item = player.getMainHandStack().getItem();
                     // Main hand
@@ -137,7 +137,7 @@ public class PlayerEntityMixin {
 
         float fireDamage = compoundTag.getFloat(SpoornUtil.FIRE_DAMAGE);
         //log.info("Fire damage: {}", fireDamage);
-        if (fireDamage > 0 && entity.isLiving()) {
+        if (fireDamage > 0 && SpoornUtil.isLivingEntity(entity)) {
             entity.setOnFireFor(5);
         }
         return fireDamage;
@@ -152,7 +152,7 @@ public class PlayerEntityMixin {
 
         float coldDamage = compoundTag.getFloat(SpoornUtil.COLD_DAMAGE);
         //log.info("Cold damage: {}", coldDamage);
-        if (coldDamage > 0 && entity.isLiving()) {
+        if (coldDamage > 0 && SpoornUtil.isLivingEntity(entity)) {
             ((LivingEntity)entity).applyStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 100, 2));
         }
         return coldDamage;

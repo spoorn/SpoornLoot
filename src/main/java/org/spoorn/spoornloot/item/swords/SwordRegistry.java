@@ -81,7 +81,7 @@ public class SwordRegistry {
     private static void registerLightningCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
-            if (SpoornUtil.isSpoornSwordItem(item) && entity.isLiving()) {
+            if (SpoornUtil.isSpoornSwordItem(item) && SpoornUtil.isLivingEntity(entity)) {
                 CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.LIGHTNING_AFFINITY)) {
                     log.error("Could not find LightningAffinity data on Spoorn Sword.");
@@ -104,7 +104,7 @@ public class SwordRegistry {
     private static void registerExplosiveCallback() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             Item item = player.getMainHandStack().getItem();
-            if (SpoornUtil.isSpoornSwordItem(item) && entity.isLiving()) {
+            if (SpoornUtil.isSpoornSwordItem(item) && SpoornUtil.isLivingEntity(entity)) {
                 CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(player.getMainHandStack());
                 if (compoundTag == null || !compoundTag.contains(SpoornUtil.EXPLOSIVE)) {
                     log.error("Could not find Explosive data on Spoorn Sword.");
@@ -124,7 +124,7 @@ public class SwordRegistry {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             if (!world.isClient()) {
                 Item item = player.getMainHandStack().getItem();
-                if (SpoornUtil.isEnergySword(item) && entity.isLiving()) {
+                if (SpoornUtil.isEnergySword(item) && SpoornUtil.isLivingEntity(entity)) {
                     world.playSound(
                         null,
                         player.getBlockPos(),

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
@@ -134,6 +136,13 @@ public final class SpoornUtil {
 
     public static boolean isEnergySword(Object object) {
         return object instanceof SpoornSwordItem || object instanceof SpoornDagger || object instanceof SpoornDagger2;
+    }
+
+    /**
+     * This is needed instead of {@link Entity#isLiving()} because isLiving() is client side only.
+     */
+    public static boolean isLivingEntity(Entity entity) {
+        return entity instanceof LivingEntity;
     }
 
     /**

@@ -7,15 +7,27 @@ import net.minecraft.util.Identifier;
 import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.enchantment.EnchantmentRegistry;
 import org.spoorn.spoornloot.item.swords.SwordRegistry;
+import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 
 @Log4j2
 public class SpoornLoot implements ModInitializer {
 
+    // For future reference, for classes that have static fields only, they MUST be referenced in these entrypoints
+    // otherwise it won't load on an actual multiplayer server.
     @Override
     public void onInitialize() {
         log.info("Hello mod from SpoornLoot!");
+
+        // Config
         ModConfig.init();
+
+        // Swords
         SwordRegistry.init();
+
+        // Enchantments
         EnchantmentRegistry.init();
+
+        // Sounds
+        SpoornSoundsUtil.init();
     }
 }

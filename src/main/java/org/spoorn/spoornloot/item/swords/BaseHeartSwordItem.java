@@ -2,6 +2,7 @@ package org.spoorn.spoornloot.item.swords;
 
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
@@ -48,7 +49,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
     private void registerHitMechanics() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
             ItemStack stack = player.getMainHandStack();
-            boolean rightSituation = stack.getItem() instanceof BaseHeartSwordItem && entity.isLiving();
+            boolean rightSituation = (stack.getItem() instanceof BaseHeartSwordItem) && SpoornUtil.isLivingEntity(entity);
             if (rightSituation && !world.isClient() && stack.getItem() instanceof HeartPurpleSwordItem) {
                 CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(stack);
                 long currTime = world.getTime();
@@ -69,6 +70,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
                     double d = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
                     double e = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
                     double f = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                    // TODO: Add particles to server side
                     world.addParticle(ParticleTypes.HEART, entity.getParticleX(1.0D),
                             entity.getRandomBodyY() + 0.5D, entity.getParticleZ(1.0D), d, e, f);
                 }

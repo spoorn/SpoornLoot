@@ -20,6 +20,11 @@ public class SpoornSoundsUtil {
     public static final SoundEvent SM_WAND_SOUND = registerSoundEvent(SM_WAND_ID, new SoundEvent(SM_WAND_ID));
     public static final SoundEvent SM_THEME_SOUND = registerSoundEvent(SM_THEME_ID, new SoundEvent(SM_THEME_ID));
 
+    public static void init() {
+        // Do nothing but this is required because mod loader stupid and needs explicit code entrypoints to load for
+        // client vs server
+    }
+
     private static SoundEvent registerSoundEvent(Identifier identifier, SoundEvent soundEvent) {
         return Registry.register(Registry.SOUND_EVENT, identifier, soundEvent);
     }

@@ -10,7 +10,8 @@ public class EnchantmentRegistry {
         register(DualWieldEnchantment.DUAL_WIELD_ID, new DualWieldEnchantment());
 
     public static void init() {
-        // Do nothing
+        // Do nothing but this is required because mod loader stupid and needs explicit code entrypoints to load for
+        // client vs server
     }
 
     private static <T extends Enchantment> T register(Identifier identifier, T enchantment) {
