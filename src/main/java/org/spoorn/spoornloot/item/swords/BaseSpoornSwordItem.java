@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
@@ -13,7 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.spoorn.spoornloot.mixin.LivingEntityMixin;
+import org.spoorn.spoornloot.mixin.LivingEntityAccessorMixin;
 import org.spoorn.spoornloot.util.SpoornUtil;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
@@ -88,7 +87,7 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
             //log.info("Lifesteal: {}", lifesteal);
             try {
                 if (lifesteal > 0) {
-                    float lastDamageTaken = ((LivingEntityMixin) target).getLastDamageTaken();
+                    float lastDamageTaken = ((LivingEntityAccessorMixin) target).getLastDamageTaken();
                     //log.info("Last damage taken: {}", lastDamageTaken);
                     //log.info("Heal amount: {}", lifesteal * lastDamageTaken);
                     attacker.heal(lifesteal * lastDamageTaken);

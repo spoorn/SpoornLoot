@@ -36,4 +36,13 @@ public class ServerConfig {
 
     @Comment("This is how much we scale the damage of the offhand weapon when dual wielding [1/value] [default = 2 (50%)]")
     public int dualWieldDamageScale = 2;
+
+    @Comment("Block radius range of Heart Sword Charm effect on entities [default = 20]")
+    public int heartSwordCharmRadius = 20;
+
+    @Comment("Charm effect duration in seconds [default = 10]")
+    public int charmEffectDuration = 10;
+
+    @Comment("True if Heart Sword Charm should affect other players, else false (EXPERIMENTAL) [default = false]")
+    public boolean shouldCharmAffectPlayers = false;
 }

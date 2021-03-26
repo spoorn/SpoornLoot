@@ -2,10 +2,9 @@ package org.spoorn.spoornloot;
 
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
-import net.minecraft.util.Identifier;
 import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.enchantment.EnchantmentRegistry;
+import org.spoorn.spoornloot.entity.SpoornEntityDataUtil;
 import org.spoorn.spoornloot.item.swords.SwordRegistry;
 import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 
@@ -29,5 +28,8 @@ public class SpoornLoot implements ModInitializer {
 
         // Sounds
         SpoornSoundsUtil.init();
+
+        // Entity data
+        SpoornEntityDataUtil.init();
     }
 }

@@ -6,16 +6,20 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+import org.spoorn.spoornloot.config.ModConfig;
+import org.spoorn.spoornloot.entity.SpoornEntityDataUtil;
+import org.spoorn.spoornloot.entity.SpoornTrackedData;
 import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
 import org.spoorn.spoornloot.util.SpoornUtil;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
+
+import java.util.Optional;
 
 @Log4j2
 abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
@@ -40,6 +44,39 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
                         0.6f,
                         1f
                 );
+
+                int r = ModConfig.get().serverConfig.heartSwordCharmRadius;
+                Box box = new Box(user.getX()-r, user.getY()-r, user.getZ()-r,
+                        user.getX()+r, user.getY()+r, user.getZ()+r);
+                world.getOtherEntities(user, box, entity ->
+                        SpoornUtil.isLivingEntity(entity)
+                        && (ModConfig.get().serverConfig.shouldCharmAffectPlayers || !(entity instanceof PlayerEntity))
+                ).forEach(entity -> {
+                    // Register Spoorn TrackedData at runtime if it doesn't exist yet
+                    if (!SpoornEntityDataUtil.containsTrackedData(entity.getClass())) {
+                        SpoornEntityDataUtil.registerSpoornEntityTrackedData(entity);
+                    }
+
+                    // Start tracking the new Spoorn TrackedData if it isn't already
+                    SpoornEntityDataUtil.startTrackingSpoornTrackedDataIfNotTracking(entity);
+
+                    // Get TrackedData from entity if available, else create a new one
+                    // **Note** The SpoornTrackedData should ALWAYS be available since we just started tracking above
+                    Optional<SpoornTrackedData> spoornTrackedData =
+                        SpoornEntityDataUtil.getSpoornTrackedDataOrCreate(entity);
+
+                    // Code beyond this point assumes TrackedData is already available!!
+
+                    // Set Charm owner UUID to entity data and current tick time
+                    spoornTrackedData.get().setCharmOwnerUUID(user.getUuid());
+                    spoornTrackedData.get().setLastCharmTickTime(world.getTime());
+
+                    // Update entity data tracker with the new or changed SpoornTrackedData with new charm owner UUID
+                    entity.getDataTracker().set(SpoornEntityDataUtil.getTrackedData(
+                            entity.getClass()), spoornTrackedData);
+                    SpoornUtil.spawnHeartParticles(world, entity);
+                });
+
                 return TypedActionResult.success(stack);
             }
         }
@@ -66,13 +103,7 @@ abstract class BaseHeartSwordItem extends BaseSpoornSwordItem {
                     compoundTag.putFloat(SpoornUtil.LAST_SPOORN_SOUND, currTime);
                 }
 
-                for (int i = 0; i < 2; ++i) {
-                    double d = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
-                    double e = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
-                    double f = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
-                    ((ServerWorld)world).spawnParticles(ParticleTypes.HEART, entity.getParticleX(1.0D),
-                            entity.getRandomBodyY() + 0.5D, entity.getParticleZ(1.0D), 1, d, e, f, 0);
-                }
+                SpoornUtil.spawnHeartParticles(world, entity);
             }
             return ActionResult.PASS;
         });

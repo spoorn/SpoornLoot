@@ -6,14 +6,18 @@
   "mixins": [
     "LootTableMixin",
     "PlayerEntityMixin",
-    "LivingEntityMixin",
+    "LivingEntityAccessorMixin",
     "ExplosionMixin",
-    "BipedEntityModelMixin"
+    "BipedEntityModelMixin",
+    "LivingEntityMixin",
+    "DataTrackerAccessorMixin"
   ],
   "client": [
     "InGameHudMixin",
     "ItemStackMixin",
     "HeldItemRendererMixin"
+  ],
+  "server": [
   ],
   "injectors": {
     "defaultRequire": 1

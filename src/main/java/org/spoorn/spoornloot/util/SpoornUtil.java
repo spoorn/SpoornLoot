@@ -10,21 +10,21 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import org.spoorn.spoornloot.config.ModConfig;
 import org.spoorn.spoornloot.enchantment.EnchantmentRegistry;
 import org.spoorn.spoornloot.item.common.DualWieldable;
-import org.spoorn.spoornloot.item.daggers.BaseDagger;
 import org.spoorn.spoornloot.item.daggers.SpoornDagger;
 import org.spoorn.spoornloot.item.daggers.SpoornDagger2;
-import org.spoorn.spoornloot.item.swords.BaseLongSwordItem;
 import org.spoorn.spoornloot.item.swords.BaseSpoornSwordItem;
 import org.spoorn.spoornloot.item.swords.SpoornSwordItem;
 import org.spoorn.spoornloot.item.swords.SwordRegistry;
@@ -262,6 +262,20 @@ public final class SpoornUtil {
                 boolean explosive = explosiveChance < (1.0 / ModConfig.get().serverConfig.explosiveChance);
                 compoundTag.putBoolean(EXPLOSIVE, explosive);
             }
+        }
+    }
+
+    public static void spawnHeartParticles(World world, Entity entity) {
+        if (!world.isClient()) {
+            for (int i = 0; i < 2; ++i) {
+                double d = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                double e = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                double f = SpoornUtil.RANDOM.nextGaussian() * 0.02D;
+                ((ServerWorld) world).spawnParticles(ParticleTypes.HEART, entity.getParticleX(1.0D),
+                        entity.getRandomBodyY() + 0.5D, entity.getParticleZ(1.0D), 1, d, e, f, 0);
+            }
+        } else {
+            log.error("Spawning Heart Particles expected ServerWorld but got ClientWorld");
         }
     }
 
