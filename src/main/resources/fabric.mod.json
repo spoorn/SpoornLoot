@@ -27,7 +27,9 @@
   "depends": {
     "fabricloader": "*",
     "fabric": "*",
-    "minecraft": ">=1.16.1",
+    "minecraft": ">=1.16.1"
+  },
+  "suggests": {
     "cloth-config2": "*"
   },
   "breaks": {
