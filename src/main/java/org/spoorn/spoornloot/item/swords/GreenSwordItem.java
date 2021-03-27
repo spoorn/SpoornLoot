@@ -9,7 +9,6 @@ import net.minecraft.util.Rarity;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
-@Log4j2
 public class GreenSwordItem extends BaseSpoornSwordItem {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "green_sword");

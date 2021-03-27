@@ -56,6 +56,7 @@ public class SwordRegistry {
     private static final BaseSpoornSwordItem DEFAULT_GREENTEA = registerSword(PockyGreenTeaSwordItem.IDENTIFIER, new PockyGreenTeaSwordItem());
     private static final BaseSpoornSwordItem DEFAULT_CHARM = registerSword(CharmSword.IDENTIFIER, new CharmSword());
     private static final BaseSpoornSwordItem DEFAULT_CHARM_LIGHT = registerSword(CharmLightSword.IDENTIFIER, new CharmLightSword());
+    private static final BaseSpoornSwordItem DEFAULT_CHARM_GRADIENT = registerSword(CharmGradientSword.IDENTIFIER, new CharmGradientSword());
     private static final BaseDagger DEFAULT_CYAN_DAGGER = registerSword(CyanDagger.IDENTIFIER, new CyanDagger());
     private static final BaseDagger DEFAULT_DAISY_DAGGER = registerSword(DaisyDagger.IDENTIFIER, new DaisyDagger());
     private static final BaseDagger DEFAULT_GREEN_DAGGER = registerSword(GreenDagger.IDENTIFIER, new GreenDagger());

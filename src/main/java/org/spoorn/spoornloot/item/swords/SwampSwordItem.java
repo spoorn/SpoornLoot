@@ -2,14 +2,12 @@ package org.spoorn.spoornloot.item.swords;
 
 import static org.spoorn.spoornloot.util.SpoornUtil.MODID;
 import static org.spoorn.spoornloot.util.SpoornUtil.SPOORN_ITEM_GROUP;
-import lombok.extern.log4j.Log4j2;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
-@Log4j2
 public class SwampSwordItem extends BaseSpoornSwordItem {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "swamp_sword");

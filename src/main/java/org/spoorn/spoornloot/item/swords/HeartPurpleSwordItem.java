@@ -1,11 +1,9 @@
 package org.spoorn.spoornloot.item.swords;
 
 import static org.spoorn.spoornloot.util.SpoornUtil.MODID;
-import lombok.extern.log4j.Log4j2;
 import net.minecraft.util.Identifier;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
-@Log4j2
 public class HeartPurpleSwordItem extends BaseCharmSword {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "heart_purple_sword");
