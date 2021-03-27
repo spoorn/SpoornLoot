@@ -4,7 +4,7 @@ import static org.spoorn.spoornloot.util.SpoornUtil.MODID;
 import net.minecraft.util.Identifier;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
-public class SomberSword extends BaseCharmSword {
+public class SomberSword extends BaseSpoornSwordItem {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "somber_sword");
 
