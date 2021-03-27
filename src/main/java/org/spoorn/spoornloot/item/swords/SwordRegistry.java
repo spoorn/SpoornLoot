@@ -54,9 +54,10 @@ public class SwordRegistry {
     private static final BaseSpoornSwordItem DEFAULT_POCKY_CARAMEL = registerSword(PockyCaramelSwordItem.IDENTIFIER, new PockyCaramelSwordItem());
     private static final BaseSpoornSwordItem DEFAULT_POCKY_CHERRY = registerSword(PockyCherrySwordItem.IDENTIFIER, new PockyCherrySwordItem());
     private static final BaseSpoornSwordItem DEFAULT_GREENTEA = registerSword(PockyGreenTeaSwordItem.IDENTIFIER, new PockyGreenTeaSwordItem());
-    private static final BaseSpoornSwordItem DEFAULT_CHARM = registerSword(CharmSword.IDENTIFIER, new CharmSword());
-    private static final BaseSpoornSwordItem DEFAULT_CHARM_LIGHT = registerSword(CharmLightSword.IDENTIFIER, new CharmLightSword());
+    private static final BaseSpoornSwordItem DEFAULT_CHARM = registerSword(DarkCharmSword.IDENTIFIER, new DarkCharmSword());
+    private static final BaseSpoornSwordItem DEFAULT_CHARM_LIGHT = registerSword(SomberSword.IDENTIFIER, new SomberSword());
     private static final BaseSpoornSwordItem DEFAULT_CHARM_GRADIENT = registerSword(CharmGradientSword.IDENTIFIER, new CharmGradientSword());
+    private static final BaseSpoornSwordItem DEFAULT_SUNSET = registerSword(SunsetSword.IDENTIFIER, new SunsetSword());
     private static final BaseDagger DEFAULT_CYAN_DAGGER = registerSword(CyanDagger.IDENTIFIER, new CyanDagger());
     private static final BaseDagger DEFAULT_DAISY_DAGGER = registerSword(DaisyDagger.IDENTIFIER, new DaisyDagger());
     private static final BaseDagger DEFAULT_GREEN_DAGGER = registerSword(GreenDagger.IDENTIFIER, new GreenDagger());
@@ -65,6 +66,7 @@ public class SwordRegistry {
     private static final BaseDagger DEFAULT_RED_DAGGER = registerSword(RedDagger.IDENTIFIER, new RedDagger());
     private static final BaseDagger DEFAULT_SPOORN_DAGGER = registerSword(SpoornDagger.IDENTIFIER, new SpoornDagger());
     private static final BaseDagger DEFAULT_SPOORN_DAGGER_2 = registerSword(SpoornDagger2.IDENTIFIER, new SpoornDagger2());
+    private static final BaseDagger DEFAULT_SUNSET_DAGGER = registerSword(SunsetDagger.IDENTIFIER, new SunsetDagger());
 
     private static final Identifier LOOT_CHEST_ID = new Identifier("minecraft", "chests");
 

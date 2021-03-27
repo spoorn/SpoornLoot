@@ -14,4 +14,9 @@ public abstract class BaseDagger extends BaseSpoornSwordItem implements DualWiel
         Settings settings) {
         super(toolMaterial, attackDamage, attackSpeed, spoornRarity, settings);
     }
+
+    // Convenience constructor
+    public BaseDagger(SpoornRarity spoornRarity, int attackDamage, float attackSpeed) {
+        super(spoornRarity, attackDamage, attackSpeed);
+    }
 }

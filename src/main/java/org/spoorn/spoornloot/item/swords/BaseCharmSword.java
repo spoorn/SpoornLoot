@@ -34,19 +34,7 @@ public class BaseCharmSword extends BaseSpoornSwordItem {
         ItemStack stack = user.getStackInHand(hand);
         if (!world.isClient()) {
             if (!user.getItemCooldownManager().isCoolingDown(stack.getItem())) {
-                user.getItemCooldownManager().set(stack.getItem(), 600);
-
-                // Only play song for the Heart Purple Sword
-                if (stack.getItem() instanceof HeartPurpleSwordItem) {
-                    world.playSound(
-                            null,
-                            user.getBlockPos(),
-                            SpoornSoundsUtil.SM_THEME_SOUND,
-                            SoundCategory.PLAYERS,
-                            0.6f,
-                            1f
-                    );
-                }
+                user.getItemCooldownManager().set(stack.getItem(), ModConfig.get().serverConfig.charmEffectCooldown * 20);
 
                 int r = ModConfig.get().serverConfig.heartSwordCharmRadius;
                 Box box = new Box(user.getX()-r, user.getY()-r, user.getZ()-r,

@@ -43,6 +43,9 @@ public class ServerConfig {
     @Comment("Charm effect duration in seconds [default = 10]")
     public int charmEffectDuration = 10;
 
+    @Comment("Charm effect cooldown in seconds [default = 30]")
+    public int charmEffectCooldown = 30;
+
     @Comment("True if Heart Sword Charm should affect other players, else false (EXPERIMENTAL) [default = false]")
     public boolean shouldCharmAffectPlayers = false;
 }
