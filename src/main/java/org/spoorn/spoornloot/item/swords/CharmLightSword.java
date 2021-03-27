@@ -6,19 +6,19 @@ import net.minecraft.util.Identifier;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
 
 @Log4j2
-public class HeartPurpleSwordItem extends BaseCharmSword {
+public class CharmLightSword extends BaseCharmSword {
 
-    public static final Identifier IDENTIFIER = new Identifier(MODID, "heart_purple_sword");
+    public static final Identifier IDENTIFIER = new Identifier(MODID, "charm_light_sword");
 
     private static final SpoornRarity DEFAULT_SPOORN_RARITY = SpoornRarity.PINK;
-    private static final int DEFAULT_ATK_DMG = 8;
-    private static final float DEFAULT_ATK_SPD = -2.2f;
+    private static final int DEFAULT_ATK_DMG = 9;
+    private static final float DEFAULT_ATK_SPD = -2.4f;
 
-    public HeartPurpleSwordItem() {
+    public CharmLightSword() {
         this(DEFAULT_SPOORN_RARITY, DEFAULT_ATK_DMG, DEFAULT_ATK_SPD);
     }
 
-    public HeartPurpleSwordItem(SpoornRarity spoornRarity, int attackDamage, float attackSpeed) {
+    public CharmLightSword(SpoornRarity spoornRarity, int attackDamage, float attackSpeed) {
         super(spoornRarity, attackDamage, attackSpeed);
     }
 }

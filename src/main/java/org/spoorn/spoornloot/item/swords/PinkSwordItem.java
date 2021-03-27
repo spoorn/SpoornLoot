@@ -14,7 +14,7 @@ public class PinkSwordItem extends BaseSpoornSwordItem {
 
     public static final Identifier IDENTIFIER = new Identifier(MODID, "pink_sword");
 
-    private static final SpoornRarity DEFAULT_SPOORN_RARITY = SpoornRarity.EPIC;
+    private static final SpoornRarity DEFAULT_SPOORN_RARITY = SpoornRarity.UNCOMMON;
     private static final ToolMaterial DEFAULT_TOOL_MATERIAL = new SpoornToolMaterial(DEFAULT_SPOORN_RARITY);
     private static final int DEFAULT_ATK_DMG = 7;
     private static final float DEFAULT_ATK_SPD = -2.4f;

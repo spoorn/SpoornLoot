@@ -51,7 +51,7 @@ public class SpoornEntityDataUtil {
 
     // Our own TrackedData registry, extension of the vanilla one in DataTracker
     public static Map<Class<? extends Entity>, TrackedData<Optional<SpoornTrackedData>>> SPOORN_TRACKED_ENTITY_DATA
-        = new HashMap<>();
+            = new HashMap<>();
 
     public static void init() {
         // Do nothing but this is required because mod loader stupid and needs explicit code entrypoints to load for
@@ -105,20 +105,28 @@ public class SpoornEntityDataUtil {
     }
 
     /**
-     * If entity's data tracker isn't tracking SpoornTrackedData, start tracking.  This assumes SpoornTrackedData
-     * is already registered for this entity.
+     * If entity's data tracker isn't tracking SpoornTrackedData, start tracking.  If SpoornTrackedData is not yet
+     * registered, register it here as a lazy init.
      */
-    public static void startTrackingSpoornTrackedDataIfNotTracking(Entity entity) {
+    public static TrackedData<Optional<SpoornTrackedData>> startTrackingSpoornTrackedDataIfNotTracking(Entity entity) {
         Class<? extends Entity> entityClass = entity.getClass();
-        // If we find we have created this mod's custom TrackedData for the LivingEntity's class,
-        // officially track it in the entity's DataTracker so it can be de/serialized naturally in the vanilla code.
-        if (SPOORN_TRACKED_ENTITY_DATA.containsKey(entityClass)) {
+
+        // Lazy register SpoornTrackedData
+        if (!SPOORN_TRACKED_ENTITY_DATA.containsKey(entityClass)) {
+            registerSpoornEntityTrackedData(entity);
             //log.info("is in spoorn entity map");
-            if (!entityDataTrackerHasSpoornData(entity)) {
-                //log.info("not in data tracker entries");
-                entity.getDataTracker().startTracking(SPOORN_TRACKED_ENTITY_DATA.get(entityClass), Optional.empty());
-            }
         }
+
+        TrackedData<Optional<SpoornTrackedData>> trackedData = SPOORN_TRACKED_ENTITY_DATA.get(entityClass);
+
+        // If entity is not already tracking SpoornTrackedData,
+        // officially track it in the entity's DataTracker so it can be de/serialized naturally in the vanilla code.
+        if (!entityDataTrackerHasSpoornData(entity)) {
+            //log.info("not in data tracker entries");
+            entity.getDataTracker().startTracking(trackedData, Optional.empty());
+        }
+
+        return trackedData;
     }
 
     /**
@@ -155,6 +163,14 @@ public class SpoornEntityDataUtil {
         return Optional.empty();
     }
 
+    /**
+     * Helper to set SpoornTrackedData on an entity.  Assumes the entity already contains a previous SpoornTrackedData.
+     */
+    public static void setSpoornTrackedDataOnEntity(TrackedData<Optional<SpoornTrackedData>> trackedData,
+                                                    Optional<SpoornTrackedData> spoornTrackedData, Entity entity) {
+        entity.getDataTracker().set(trackedData, spoornTrackedData);
+    }
+
     // Helper method for accessing our SpoornTrackedData registry
     public static boolean containsTrackedData(Class<? extends Entity> entityClass) {
         return SPOORN_TRACKED_ENTITY_DATA.containsKey(entityClass);
@@ -167,24 +183,24 @@ public class SpoornEntityDataUtil {
 
     // Our TrackedDataHandler with our custom data object
     private static final TrackedDataHandler<Optional<SpoornTrackedData>> OPTIONAL_SPOORN_TRACKED_DATA =
-        new TrackedDataHandler<Optional<SpoornTrackedData>>() {
-            public void write(PacketByteBuf packetByteBuf, Optional<SpoornTrackedData> optional) {
-                packetByteBuf.writeBoolean(optional.isPresent());
-                if (optional.isPresent()) {
-                    packetByteBuf.writeBytes(SerializationUtils.serialize(optional.get()));
+            new TrackedDataHandler<Optional<SpoornTrackedData>>() {
+                public void write(PacketByteBuf packetByteBuf, Optional<SpoornTrackedData> optional) {
+                    packetByteBuf.writeBoolean(optional.isPresent());
+                    if (optional.isPresent()) {
+                        packetByteBuf.writeBytes(SerializationUtils.serialize(optional.get()));
+                    }
+
                 }
 
-            }
+                public Optional<SpoornTrackedData> read(PacketByteBuf packetByteBuf) {
+                    return !packetByteBuf.readBoolean() ? Optional.empty()
+                            : Optional.of(SerializationUtils.deserialize(packetByteBuf.readByteArray()));
+                }
 
-            public Optional<SpoornTrackedData> read(PacketByteBuf packetByteBuf) {
-                return !packetByteBuf.readBoolean() ? Optional.empty()
-                    : Optional.of(SerializationUtils.deserialize(packetByteBuf.readByteArray()));
-            }
-
-            public Optional<SpoornTrackedData> copy(Optional<SpoornTrackedData> optional) {
-                return optional;
-            }
-    };
+                public Optional<SpoornTrackedData> copy(Optional<SpoornTrackedData> optional) {
+                    return optional;
+                }
+            };
 
     // Register our data handler
     static {

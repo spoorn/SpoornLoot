@@ -1,5 +1,6 @@
 package org.spoorn.spoornloot.item.swords;
 
+import static org.spoorn.spoornloot.util.SpoornUtil.SPOORN_ITEM_GROUP;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.item.TooltipContext;
@@ -10,11 +11,13 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.*;
+import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spoorn.spoornloot.mixin.LivingEntityAccessorMixin;
 import org.spoorn.spoornloot.util.SpoornUtil;
 import org.spoorn.spoornloot.util.rarity.SpoornRarity;
+import org.spoorn.spoornloot.util.settings.SpoornItemSettings;
 
 import java.util.List;
 
@@ -31,6 +34,15 @@ public abstract class BaseSpoornSwordItem extends SwordItem {
         super(toolMaterial, attackDamage, attackSpeed, settings);
         this.spoornRarity = spoornRarity;
         this.baseSettings = settings;
+    }
+
+    // Convenience constructor
+    public BaseSpoornSwordItem(SpoornRarity spoornRarity, int attackDamage, float attackSpeed) {
+        this(new SpoornToolMaterial(spoornRarity), attackDamage, attackSpeed, spoornRarity,
+            new SpoornItemSettings()
+                .spoornRarity(spoornRarity)
+                .group(SPOORN_ITEM_GROUP)
+                .rarity(Rarity.EPIC));
     }
 
     @Override

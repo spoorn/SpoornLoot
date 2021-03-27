@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
@@ -53,6 +54,8 @@ public class SwordRegistry {
     private static final BaseSpoornSwordItem DEFAULT_POCKY_CARAMEL = registerSword(PockyCaramelSwordItem.IDENTIFIER, new PockyCaramelSwordItem());
     private static final BaseSpoornSwordItem DEFAULT_POCKY_CHERRY = registerSword(PockyCherrySwordItem.IDENTIFIER, new PockyCherrySwordItem());
     private static final BaseSpoornSwordItem DEFAULT_GREENTEA = registerSword(PockyGreenTeaSwordItem.IDENTIFIER, new PockyGreenTeaSwordItem());
+    private static final BaseSpoornSwordItem DEFAULT_CHARM = registerSword(CharmSword.IDENTIFIER, new CharmSword());
+    private static final BaseSpoornSwordItem DEFAULT_CHARM_LIGHT = registerSword(CharmLightSword.IDENTIFIER, new CharmLightSword());
     private static final BaseDagger DEFAULT_CYAN_DAGGER = registerSword(CyanDagger.IDENTIFIER, new CyanDagger());
     private static final BaseDagger DEFAULT_DAISY_DAGGER = registerSword(DaisyDagger.IDENTIFIER, new DaisyDagger());
     private static final BaseDagger DEFAULT_GREEN_DAGGER = registerSword(GreenDagger.IDENTIFIER, new GreenDagger());
@@ -151,6 +154,30 @@ public class SwordRegistry {
                             1f
                     );
                 }
+            }
+            return ActionResult.PASS;
+        });
+
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            ItemStack stack = player.getMainHandStack();
+            boolean rightSituation = (stack.getItem() instanceof HeartPurpleSwordItem) && SpoornUtil.isLivingEntity(entity);
+            if (rightSituation && !world.isClient()) {
+                CompoundTag compoundTag = SpoornUtil.getButDontCreateSpoornCompoundTag(stack);
+                long currTime = world.getTime();
+                if (!compoundTag.contains(SpoornUtil.LAST_SPOORN_SOUND)
+                        || compoundTag.getFloat(SpoornUtil.LAST_SPOORN_SOUND) + 80 < currTime) {
+                    world.playSound(
+                            null,
+                            player.getBlockPos(),
+                            SpoornSoundsUtil.SM_WAND_SOUND,
+                            SoundCategory.PLAYERS,
+                            0.3f,
+                            1f
+                    );
+                    compoundTag.putFloat(SpoornUtil.LAST_SPOORN_SOUND, currTime);
+                }
+
+                SpoornUtil.spawnHeartParticles(world, entity);
             }
             return ActionResult.PASS;
         });
