@@ -31,6 +31,7 @@
     "cloth-config2": "*"
   },
   "breaks": {
-    "pehkui": "<1.8.0"
+    "pehkui": "<1.8.0",
+    "modmenu": "<=1.14.13"
   }
 }
