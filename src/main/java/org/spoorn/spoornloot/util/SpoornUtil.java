@@ -198,8 +198,8 @@ public final class SpoornUtil {
 
             // Crit chance
             if (!compoundTag.contains(CRIT_CHANCE)) {
-                float randFloat = RANDOM.nextFloat();
-                if (randFloat < (1.0 / ModConfig.get().serverConfig.critChanceChance)) {
+                int critChanceChance = ModConfig.get().serverConfig.critChanceChance;
+                if ((critChanceChance > 0) && (RANDOM.nextFloat() < (1.0 / critChanceChance))) {
                     // This mean and sd makes it so  there's a ~0.1% chance of getting above 90% crit chance
                     float critChance = (float) getNextGaussian(25, 20, 20, 100) / 100;
                     //log.info("Setting sword crit chance to {} for stack {}", critChance, stack);
@@ -211,16 +211,16 @@ public final class SpoornUtil {
 
             // Lightning affinity
             if (!compoundTag.contains(LIGHTNING_AFFINITY)) {
-                float lightningChance = RANDOM.nextFloat();
+                int lightningAffinityChance = ModConfig.get().serverConfig.lightningAffinityChance;
                 //log.info("Sword lightning chance is {} for stack {}", lightningChance, stack);
-                boolean hasLightningAffinity = lightningChance < (1.0 / ModConfig.get().serverConfig.lightningAffinityChance);
+                boolean hasLightningAffinity = (lightningAffinityChance > 0) && (RANDOM.nextFloat() < (1.0 / lightningAffinityChance));
                 compoundTag.putBoolean(LIGHTNING_AFFINITY, hasLightningAffinity);
             }
 
             // Fire damage
             if (!compoundTag.contains(FIRE_DAMAGE)) {
-                float fireChance = RANDOM.nextFloat();
-                if (fireChance < (1.0 / ModConfig.get().serverConfig.fireDamageChance)) {
+                int fireDamageChance = ModConfig.get().serverConfig.fireDamageChance;
+                if ((fireDamageChance > 0) && (RANDOM.nextFloat() < (1.0 / fireDamageChance))) {
                     // This mean and sd makes it so  there's a ~9% chance of getting above 5 fire damage
                     float fireDamage = (float) getNextGaussian(1, 3, 1, ModConfig.get().serverConfig.maxSwordFireDamage);
                     //log.info("Setting sword fire damage to {} for stack {}", fireDamage, stack);
@@ -232,8 +232,8 @@ public final class SpoornUtil {
 
             // Fire damage
             if (!compoundTag.contains(COLD_DAMAGE)) {
-                float coldChance = RANDOM.nextFloat();
-                if (coldChance < (1.0 / ModConfig.get().serverConfig.coldChance)) {
+                int coldChanceChance = ModConfig.get().serverConfig.coldChance;
+                if ((coldChanceChance > 0) && (RANDOM.nextFloat() < (1.0 / coldChanceChance))) {
                     // This mean and sd makes it so  there's a ~9% chance of getting above 5 fire damage
                     float coldDamage = (float) getNextGaussian(1, 3, 1, ModConfig.get().serverConfig.maxSwordColdDamage);
                     //log.info("Setting sword cold damage to {} for stack {}", coldDamage, stack);
@@ -245,8 +245,8 @@ public final class SpoornUtil {
 
             // Lifesteal
             if (!compoundTag.contains(LIFESTEAL)) {
-                float lifestealChance = RANDOM.nextFloat();
-                if (lifestealChance < (1.0 / ModConfig.get().serverConfig.lifestealChance)) {
+                int lifestealChanceChance = ModConfig.get().serverConfig.lifestealChance;
+                if ((lifestealChanceChance > 0) && (RANDOM.nextFloat() < (1.0 / lifestealChanceChance))) {
                     // This mean and sd makes it so  there's a ~10% chance of getting above 10 lifesteal
                     float lifesteal = (float) getNextGaussian(5, 3.9, 0, ModConfig.get().serverConfig.maxLifesteal);
                     //log.info("Setting sword fire damage to {} for stack {}", fireDamage, stack);
@@ -258,8 +258,8 @@ public final class SpoornUtil {
 
             // Explosive
             if (!compoundTag.contains(EXPLOSIVE)) {
-                float explosiveChance = RANDOM.nextFloat();
-                boolean explosive = explosiveChance < (1.0 / ModConfig.get().serverConfig.explosiveChance);
+                int explosiveChanceChance = ModConfig.get().serverConfig.explosiveChance;
+                boolean explosive = (explosiveChanceChance > 0) && (RANDOM.nextFloat() < (1.0 / explosiveChanceChance));
                 compoundTag.putBoolean(EXPLOSIVE, explosive);
             }
         }

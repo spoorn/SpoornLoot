@@ -187,16 +187,21 @@ public class SwordRegistry {
     }
 
     private static void initSwordLootPools() {
-        float chance = 1.0f / ModConfig.get().serverConfig.swordSpawnInLootChestsChance;
-        log.info("Spoorn sword spawn chance is {}", chance);
-        FabricLootPoolBuilder builder = FabricLootPoolBuilder.builder()
-                .rolls(ConstantLootTableRange.create(1))
-                .withCondition(RandomChanceLootCondition.builder(chance).build());
-        for (BaseSpoornSwordItem item : spoornSwords) {
-            builder.withEntry(ItemEntry.builder(item).weight(item.getSpoornRarity().getWeight()).build());
-        }
+        int spawnChance = ModConfig.get().serverConfig.swordSpawnInLootChestsChance;
+        if (spawnChance > 0) {
+            float chance = 1.0f / spawnChance;
+            log.info("Spoorn sword spawn chance is {}", chance);
+            FabricLootPoolBuilder builder = FabricLootPoolBuilder.builder()
+                    .rolls(ConstantLootTableRange.create(1))
+                    .withCondition(RandomChanceLootCondition.builder(chance).build());
+            for (BaseSpoornSwordItem item : spoornSwords) {
+                builder.withEntry(ItemEntry.builder(item).weight(item.getSpoornRarity().getWeight()).build());
+            }
 
-        addToLootChests(builder.build());
+            addToLootChests(builder.build());
+        } else {
+            log.info("Spoorn sword spawn chance is 0");
+        }
     }
 
     private static void addToLootChests(LootPool lootPool) {
