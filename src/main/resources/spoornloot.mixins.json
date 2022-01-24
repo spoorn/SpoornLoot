@@ -8,14 +8,12 @@
     "PlayerEntityMixin",
     "LivingEntityAccessorMixin",
     "ExplosionMixin",
-    "BipedEntityModelMixin",
     "LivingEntityMixin",
     "DataTrackerAccessorMixin"
   ],
   "client": [
     "InGameHudMixin",
-    "ItemStackMixin",
-    "HeldItemRendererMixin"
+    "ItemStackMixin"
   ],
   "server": [
   ],

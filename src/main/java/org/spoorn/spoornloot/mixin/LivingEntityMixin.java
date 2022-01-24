@@ -44,7 +44,7 @@ public class LivingEntityMixin {
                 //System.out.println(spoornTrackedData);
                 if ((world.getTime() - spoornTrackedData.getLastCharmTickTime())
                         <= (ModConfig.get().serverConfig.charmEffectDuration * 20)) {
-                    PlayerEntity player = livingEntity.getEntityWorld().getPlayerByUuid(spoornTrackedData.getCharmOwnerUUID());
+                    PlayerEntity player = world.getPlayerByUuid(spoornTrackedData.getCharmOwnerUUID());
                     if (player == null) {
                         log.error("Entity [{}] is charmed by playerUUID=[{}], but player doesn't exist!",
                             livingEntity, spoornTrackedData.getCharmOwnerUUID());

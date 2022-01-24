@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
@@ -21,7 +20,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spoorn.spoornloot.config.ModConfig;
-import org.spoorn.spoornloot.enchantment.EnchantmentRegistry;
 import org.spoorn.spoornloot.item.common.DualWieldable;
 import org.spoorn.spoornloot.item.daggers.SpoornDagger;
 import org.spoorn.spoornloot.item.daggers.SpoornDagger2;
@@ -126,12 +124,8 @@ public final class SpoornUtil {
         return object instanceof BaseSpoornSwordItem;
     }
 
-    public static boolean hasDualWieldEnchantment(ItemStack stack) {
-        return EnchantmentHelper.get(stack).containsKey(EnchantmentRegistry.DUAL_WIELD_ENCHANT);
-    }
-
     public static boolean isDualWieldable(ItemStack stack) {
-        return stack.getItem() instanceof DualWieldable || hasDualWieldEnchantment(stack);
+        return stack.getItem() instanceof DualWieldable;
     }
 
     public static boolean isEnergySword(Object object) {

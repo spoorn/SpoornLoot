@@ -3,7 +3,6 @@ package org.spoorn.spoornloot;
 import lombok.extern.log4j.Log4j2;
 import net.fabricmc.api.ModInitializer;
 import org.spoorn.spoornloot.config.ModConfig;
-import org.spoorn.spoornloot.enchantment.EnchantmentRegistry;
 import org.spoorn.spoornloot.entity.SpoornEntityDataUtil;
 import org.spoorn.spoornloot.item.swords.SwordRegistry;
 import org.spoorn.spoornloot.sounds.SpoornSoundsUtil;
@@ -22,9 +21,6 @@ public class SpoornLoot implements ModInitializer {
 
         // Swords
         SwordRegistry.init();
-
-        // Enchantments
-        EnchantmentRegistry.init();
 
         // Sounds
         SpoornSoundsUtil.init();
